@@ -5,8 +5,8 @@ use Carp ();
 use strict;
 use vars qw($Defaults $VERSION *ENTRY);
 
-$VERSION = '2.02';
-# $Id: Symdump.pm,v 1.45 2002/03/01 09:42:56 k Exp $
+$VERSION = '2.03';
+# $Id: Symdump.pm,v 1.46 2002/04/18 20:09:38 k Exp $
 
 $Defaults = {
 	     'RECURS'   => 0,

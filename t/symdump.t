@@ -64,9 +64,13 @@ $t = 'arrays';
 $a = "@a";
 #write;
 if (
-    $a eq "main::ARGV main::INC main::_ main::a main::m main::syms main::vars"
-    ||
-    $a eq "main::INC main::_ main::a"
+    $a =~ /main::INC.*main::_.*main::a/
+#    $a eq "main::+ main::- main::ARGV main::INC main::_ main::a main::m main::syms main::vars"
+#    ||
+#    $a eq "main::ARGV main::INC main::_ main::a main::m main::syms main::vars"
+#    ||
+#    $a eq "main::INC main::_ main::a"
+
    ) {
     print "ok 3\n";
 } else {

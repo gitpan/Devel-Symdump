@@ -73,24 +73,17 @@ if (
     print "not ok 3: $a\n";
 }
 
-# A nonsense test as a placeholder
-print "ok 4\n";
-
-# This was the original test No 4. perl5.001m has problems with this code
-# Once the $@ in eval and $self=$self->foo problems have been ironed out,
-# we can return to this test.
-
-#eval {
-#    @a = Devel::Symdump->really_bogus('main');
-#};
-#$a = $@ ? $@ : "@a";
+eval {
+    @a = Devel::Symdump->really_bogus('main');
+};
+$a = $@ ? $@ : "@a";
 ##write;
-#if ($a =~ /^invalid Devel::Symdump method: really_bogus\(\)/) {
-#    print "ok 4\n";
-#} else {
-#    print "not ok 4 ($a)\n";
-#}
-#
+if ($a =~ /^invalid Devel::Symdump method: really_bogus\(\)/) {
+    print "ok 4\n";
+} else {
+    print "not ok 4 # a='$a'\n";
+}
+
 $sob = rnew Devel::Symdump;
 
 

@@ -5,8 +5,8 @@ use Carp ();
 use strict;
 use vars qw($Defaults $VERSION *ENTRY);
 
-$VERSION = '2.01';
-# $Id: Symdump.pm,v 1.44 2000/06/14 08:17:57 k Exp $
+$VERSION = '2.02';
+# $Id: Symdump.pm,v 1.45 2002/03/01 09:42:56 k Exp $
 
 $Defaults = {
 	     'RECURS'   => 0,
@@ -69,7 +69,7 @@ sub _symdump {
 	    }
 	    #### PACKAGE ####
 	    if (defined $val && defined *ENTRY{HASH} && $key =~ /::$/ &&
-		    $key ne "main::")
+		    $key ne "main::" && $key ne "<none>::")
 	    {
 		my($p) = $pack ne "main" ? "$pack\::" : "";
 		($p .= $key) =~ s/::$//;
@@ -310,7 +310,7 @@ Devel::Symdump - dump symbol names or the symbol table
     @array = $obj->packages;
     @array = $obj->scalars;
     @array = $obj->arrays;
-    @array = $obj->hashs;
+    @array = $obj->hashes;
     @array = $obj->functions;
     @array = $obj->filehandles;  # deprecated, use ios instead
     @array = $obj->dirhandles;   # deprecated, use ios instead

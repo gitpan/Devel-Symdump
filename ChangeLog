@@ -1,3 +1,17 @@
+2002-03-01  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* lib/Devel/Symdump.pm: perl 5.6.1 introduced a package name of
+	"<none>" to work around a bug if somebody uses the deprecated
+	C<package> without an argument. I believe we need to ignore that
+	symbol completely so that at least we follow the lead of the B::
+	extensions. Thanks to Sreeji K Das /sreeji_k at yahoo.com/ for the
+	report.
+
+2000-10-31  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Typo fix: hashs --> hashes. Thanks to Sebastien Blondeel
+	<Sebastien.Blondeel@idealx.com> for the report.
+
 2000-06-14  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Fixed my email address in and made a few tiny editorial changes

@@ -1,11 +1,11 @@
-Announce			blurb
 Changes				history of the package
 MANIFEST			This file
-Makefile.PL
-README
+Makefile.PL			Makefile generator
+README				README
 lib/Devel/Symdump.pm		The module
 lib/Devel/Symdump/Export.pm	For illustration of a Exporter interface
 t/autogen.t			test sample
 t/diff.t			test sample
 t/export.t			test sample
 t/symdump.t			test sample
+t/tree.t			test sample

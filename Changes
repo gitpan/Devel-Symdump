@@ -1,3 +1,8 @@
+=head1 2.00, May 16, 1997
+
+Fixed typos in the manpage, added a test for tree, no functional
+change, released 2.00.
+
 =head1 1.99_01, March 31, 1997
 
 1.99_01 is the designated 2.00.

@@ -1,0 +1,58 @@
+=head1 1.20, August 16th, 1995
+
+test 7 of t/symdump.t was too capricious. In fact the test was based
+on wrong assumptions about loaded packages in the perl binary. Static
+perls and dynamic perls have different symbol tables when they run the
+tests. So test 7 is gone.
+
+test 4 of t/symdump.t relied on $@ being set like in perl5.001m. This
+might not be a correct assumption. So test 4 is replaced with a dummy
+'print ok' until the $@ problem is sorted out
+
+=head1 1.19, July 3rd, 1995
+
+Added an as_string method.
+
+Rewrote the test scripts so they output standard test strings "ok
+nnn". This is dangerous for new perl releases, but will help me do get
+bug reports early.
+
+Renamed the exporting example package to Devel::Symdump::Export.
+
+=head1 1.16, May 29th, 1995
+
+Changed '${pack}::' and relatives back to "$pack\:\:" to make the
+package "-w" safe. Deleted the debug statement in _doit() after
+Gurusamy Sarathy fixed the bug in perl5.001, but left a comment there.
+
+Changed the AUTHORS section to plain "Andreas & Tom".
+
+Added this Changes file :)
+
+=head1 1.14, May 28th,1995
+
+After a considerable amount of mail exchange between Tom and me, we
+now have a unknowns() method for all the rest in the symbol table that
+we currently don't follow further. new() is renamed to rnew() which
+stands for recursive new. new() now does not go into recursion which
+becomes the default behaviour for people calling directly
+Devel::Symdump->arrays etc.
+
+Added a Devel::Symdump::Exp package for Tom who wanted the methods
+exported. Tom had tried to add Exporter to the package and to export
+the undefined methods directly. Andreas didn't trust this trick
+although it seemed to work fine. So they are still considering if it
+can be done.
+
+
+=head1 1.09, May 27th, 1995
+
+Drops all prettyprint functionality and becomes a primitiv package
+after some talk with Tom Christiansen and Gurusamy Sarathy. Moreover,
+Dean Roehrich's additions to the perlbot manpage gave me (Andreas)
+some hints about package globals which now get a new dress within the
+object.
+
+=head1 1.05, May 1995
+
+First release of the formerly Devel::Debug called package.

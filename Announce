@@ -1,0 +1,27 @@
+Subject: Devel::Symdump-1.21
+
+
+WHAT'S NEW
+
+->diff method that computes the difference between two snapshots of
+the symbol table.
+
+Distribution package renamed to Devel-Symdump instead of only Symdump.
+
+Added a basic README file.
+
+--------
+
+To install unpack it wherever you want, and run the commands:
+
+    perl Makefile.PL
+    make test
+    make install                      # as root
+
+See the test scripts for examples of the usage. The Module contains
+its own pod.
+
+I hope you enjoy it,
+andreas koenig
+
+January 22, 1996

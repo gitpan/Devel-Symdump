@@ -1,0 +1,13 @@
+Devel::Symdump
+
+provides a convenient way to inspect perl's symbol table.
+
+
+This package is Copyright (C) 1994-1996 by Andreas Koenig. It may be
+copied, used and redistributed under the same terms as perl itself.
+
+Enjoy,
+andreas
+
+January 22, 1996
+

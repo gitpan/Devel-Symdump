@@ -44,20 +44,20 @@ if ($a eq "main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::st
 $t = 'hashes';
 $a = "@a";
 #write;
-if ($a eq "main::ENV main::INC main::SIG main::prefices") {
+if ($a eq "main::@ main::ENV main::INC main::SIG main::prefices") {
     print "ok 2\n";
 } else {
-    print "not ok 2\n";
+    print "not ok 2: $a\n";
 }
 
 @a = packsort(arrays());
 $t = 'arrays';
 $a = "@a";
 #write;
-if ($a eq "main::INC main::_ main::a") {
+if ($a eq "main::ARGV main::INC main::_ main::a main::m main::syms main::vars") {
     print "ok 3\n";
 } else {
-    print "not ok 3\n";
+    print "not ok 3: $a\n";
 }
 
 # A nonsense test as a placeholder
@@ -102,10 +102,10 @@ for (active_modules($sob)) {
 } 
 $a="@m"; 
 #print "[$a]\n";
-if ($a eq "Carp Devel::Symdump Devel::Symdump::Export Exporter strict") {
+if ($a eq "Carp Devel::Symdump Devel::Symdump::Export Exporter strict vars") {
     print "ok 6\n";
 } else {
-    print "not ok 6\n";
+    print "not ok 6: $a\n";
 }
 
 
@@ -113,7 +113,10 @@ if ($a eq "Carp Devel::Symdump Devel::Symdump::Export Exporter strict") {
 # every perl is built the same way. Static perls will reveal more
 # packages and more functions being in them
 # Testing on >= seems no problem to me, we'll see
-%Expect=qw(
+
+# (Time passes) Much less unknowns in version 1.22 (perl5.003_10).
+
+my %Expect=qw(
 packages 13 scalars 28 arrays 7 hashes 7 functions 35 filehandles 9
 dirhandles 2 unknowns 53
 );

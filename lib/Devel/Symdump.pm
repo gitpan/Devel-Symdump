@@ -6,7 +6,9 @@
 
 package Devel::Symdump;
 
-require 5.001;
+use 5.003;
+use strict;
+use vars qw($Defaults $VERSION);
 
 $Defaults = {
     'RECURS' => 0,
@@ -21,17 +23,16 @@ $Defaults = {
 	'unknowns'	=> 1,
 	}
 };
-$VERSION = $VERSION = '1.21'; #avoid warning
+
+$VERSION = '1.22'; #avoid warning
 
 # Revision is not linked to $VERSION anymore
-# $Id: Symdump.pm,v 1.23 1996/01/12 23:35:32 k Exp $
+# $Id: Symdump.pm,v 1.29 1996/12/02 01:11:51 k Exp $
 
 $Defaults = $Defaults;
 
 use Carp;
 # use strict;
-
-local $^W=1;
 
 sub rnew {
     my($class,@packages) = @_;
@@ -60,53 +61,50 @@ sub _doit {
 
 sub _symdump {
     my($self,@packages) = @_ ;
-    my($key,$val,$num,$package,$pack,@todo,$tmp);
+    my($key,$val,$num,$pack,@todo,$tmp);
     my $result = {};
-    foreach $package (@packages){
-	$pack = $package;
+    foreach $pack (@packages){
 	no strict;
-	local(*stab) = *{"$package\:\:"};
-	while (($key,$val) = each(%stab)) {
-	    local(*ENTRY) = $val;
+#	local(*stab) = *{"$pack\::"};
+	while (($key,$val) = each(%{*{"$pack\::"}})) {
 	    my $gotone = 0;
 	    #### SCALAR ####
-	    if (defined $ENTRY) {
+	    if (defined $val && defined *{$val}{SCALAR}) {
 		$result->{$pack}{SCALARS}{$key}++;
 		$gotone++;
 	    }
 	    #### ARRAY ####
-	    if (defined @ENTRY) {
+	    if (defined $val && defined *{$val}{ARRAY}) {
 		$result->{$pack}{ARRAYS}{$key}++;
 		$gotone++;
 	    }
 	    #### HASH ####
-	    if (defined %ENTRY && $key !~ /::/) {
+	    if (defined $val && defined *{$val}{HASH} && $key !~ /::/) {
 		$result->{$pack}{HASHES}{$key}++;
 		$gotone++;
 	    }
 	    #### PACKAGE ####
-	    if (defined %ENTRY && $key =~ /::/ &&
-		    $key ne "main::" && ($tmp = "$pack\:\:") &&
-		    $tmp !~ /^$key/ )
+	    if (defined $val && defined *{$val}{HASH} && $key =~ /::$/ &&
+		    $key ne "main::" )
 	    {
-		my($p) = $pack ne "main" ? "$pack\:\:" : "";
+		my($p) = $pack ne "main" ? "$pack\::" : "";
 		($p .= $key) =~ s/::$//;
 		$result->{$pack}{PACKAGES}{$p}++;
 		$gotone++;
 		push @todo, $p;
 	    }
 	    #### FUNCTION ####
-	    if (defined &ENTRY) {
+	    if (defined $val && defined *{$val}{CODE}) {
 		$result->{$pack}{FUNCTIONS}{$key}++;
 		$gotone++;
 	    }
 	    #### FILEHANDLE ####
-	    if (defined fileno(ENTRY)){
+	    if (defined $val && defined fileno(*{$val}{FILEHANDLE})){
 		$result->{$pack}{FILEHANDLES}{$key}++;
 		$gotone++;
 	    }
 	    #### DIRHANDLE ####
-	    if (defined telldir(ENTRY)){
+	    if (defined $val && defined telldir(*{$val})){
 		$result->{$pack}{DIRHANDLES}{$key}++;
 		$gotone++;
 	    }
@@ -127,7 +125,7 @@ sub _partdump {
     my ($pack, @result);
     my $prepend = "";
     foreach $pack (keys %{$self->{RESULT}}){
-	$prepend = "$pack\:\:" unless $part eq 'PACKAGES';
+	$prepend = "$pack\::" unless $part eq 'PACKAGES';
 	push @result, map {"$prepend$_"} keys %{$self->{RESULT}{$pack}{$part} || {}};
     }
     return @result;
@@ -146,6 +144,23 @@ sub as_string {
 	    $_;
 	} sort $self->_partdump(uc $type);
     }
+    return join "\n", @m;
+}
+
+sub as_HTML {
+    my $self = shift;
+    my($type,@m);
+    push @m, "<TABLE>";
+    for $type (sort keys %{$self->{'AUTOLOAD'}}) {
+	push @m, "<TR><TD valign=top><B>$type</B></TD>";
+	push @m, "<TD>" . join ", ", map {
+	    s/([\000-\037\177])/ '^' .
+		pack('c', ord($1) ^ 64)
+		    /eg; $_;
+	} sort $self->_partdump(uc $type);
+	push @m, "</TD></TR>";
+    }
+    push @m, "</TABLE>";
     return join "\n", @m;
 }
 
@@ -280,6 +295,6 @@ F<dumpvar.pl> by Larry Wall.
 
 =head1 VERSION
 
-This release is $Revision: 1.23 $.
+This release is $Revision: 1.29 $.
 
 =cut

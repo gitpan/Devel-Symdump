@@ -19,40 +19,44 @@ opendir DH, ".";
 
 my $a = Devel::Symdump->rnew;
 
+my($eval) = <<'END';
 $scalar2 = 1;
 undef @array;
 undef %hash;
 %hash2 = (A=>B);
-eval '
-%package2::scalar3 = 1;
-';
+$package2::scalar3 = 3;
 close FH;
 closedir DH;
+END
+
+eval $eval;
 
 my $b = Devel::Symdump->rnew;
 
-if ( $a->diff($b) eq 'arrays
-- main::array
-dirhandles
+if ( $a->diff($b) eq 'dirhandles
 - main::DH
 filehandles
 - main::FH
 hashes
-- main::hash
 + main::hash2
 packages
 + package2
 scalars
++ main::hash2
++ main::package2::
 + main::scalar2
-unknowns
-+ main::DH
-+ main::FH
-+ main::array
-+ main::hash
-- main::hash2
-- main::scalar2
-+ package2::scalar3'){
++ package2::scalar3'
+){
     print "ok 1\n";
 } else {
-    print "not ok: diff is >>", $a->diff($b), "<<\n";
+    print "not ok:
+a
+-
+", $a->as_string, "
+b
+-
+", $b->as_string, "
+diff
+----
+", $a->diff($b), "\n";
 }

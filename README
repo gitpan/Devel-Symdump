@@ -2,6 +2,13 @@ Devel::Symdump
 
 provides a convenient way to inspect perl's symbol table.
 
+Recent changes:
+
+I'm trying to take advantage of the *entry{SCALAR} style that is much
+superior to the old way of getting at the symbol table. 1.22 seems to
+break on 5.003 and to work only partly on 5.003_10. So I'm backing out
+all the changes except for as_HTML.  Release 1.23 is without
+substantial change against 1.21.
 
 This package is Copyright (C) 1994-1996 by Andreas Koenig. It may be
 copied, used and redistributed under the same terms as perl itself.
@@ -9,5 +16,5 @@ copied, used and redistributed under the same terms as perl itself.
 Enjoy,
 andreas
 
-January 22, 1996
+December 2, 1996
 

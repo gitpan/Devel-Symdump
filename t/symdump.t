@@ -44,7 +44,11 @@ if ($a eq "main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::st
 $t = 'hashes';
 $a = "@a";
 #write;
-if ($a eq "main::@ main::ENV main::INC main::SIG main::prefices") {
+if (
+    $a eq "main::@ main::ENV main::INC main::SIG main::prefices"
+    ||
+    $a eq "main::ENV main::INC main::SIG main::prefices"
+   ) {
     print "ok 2\n";
 } else {
     print "not ok 2: $a\n";
@@ -54,7 +58,11 @@ if ($a eq "main::@ main::ENV main::INC main::SIG main::prefices") {
 $t = 'arrays';
 $a = "@a";
 #write;
-if ($a eq "main::ARGV main::INC main::_ main::a main::m main::syms main::vars") {
+if (
+    $a eq "main::ARGV main::INC main::_ main::a main::m main::syms main::vars"
+    ||
+    $a eq "main::INC main::_ main::a"
+   ) {
     print "ok 3\n";
 } else {
     print "not ok 3: $a\n";

@@ -47,7 +47,7 @@ if (
 
 @a = packsort(hashes 'main');
 $t = 'hashes';
-$a = "@a";
+$a = uncontrol("@a");
 #write;
 if (
     $a eq "main::@ main::ENV main::INC main::SIG"
@@ -80,7 +80,7 @@ print "ok 4\n";
 # Once the $@ in eval and $self=$self->foo problems have been ironed out,
 # we can return to this test.
 
-#eval { 
+#eval {
 #    @a = Devel::Symdump->really_bogus('main');
 #};
 #$a = $@ ? $@ : "@a";
@@ -100,7 +100,7 @@ $sob = rnew Devel::Symdump;
 for (active_packages($sob)) {
     push @m, "$_";
 }
-$a="@m"; 
+$a="@m";
 if ($a =~ /Carp.*Devel.*Devel::Symdump.*Devel::Symdump::Export.*DynaLoader.*Exporter.*Hidden.*big::long::hairy.*funny::little.*strict/) {
     print "ok 5\n";
 } else {
@@ -109,13 +109,18 @@ if ($a =~ /Carp.*Devel.*Devel::Symdump.*Devel::Symdump::Export.*DynaLoader.*Expo
 }
 
 #print "\nAll apparent modules:\n";
-@m=();
+my %m=();
 for (active_modules($sob)) {
-    push @m, "$_";
-} 
-$a="@m"; 
+    $m{$_}=undef;
+}
+$a = join " ", keys %m;
 #print "[$a]\n";
-if ($a eq "Carp Devel::Symdump Devel::Symdump::Export Exporter strict vars") {
+if (exists $m{"Carp"} &&
+    exists $m{"Devel::Symdump"} &&
+    exists $m{"Devel::Symdump::Export"} &&
+    exists $m{"Exporter"} &&
+    exists $m{"strict"} &&
+    exists $m{"vars"}) {
     print "ok 6\n";
 } else {
     print "not ok 6: $a\n";
@@ -140,7 +145,7 @@ $ok=6;
 for $type ( qw{
 	       packages
 	       scalars arrays hashes
-	       functions filehandles dirhandles 
+	       functions filehandles dirhandles
 	     }){
     next unless @syms = $sob->$type();
 
@@ -153,7 +158,7 @@ for $type ( qw{
 	    @syms = sort @syms;
 	} else {
 	    @syms = packsort(@syms);
-	} 
+	}
     }
 
 #    print "\nAll $type visible:\n";
@@ -162,17 +167,17 @@ for $type ( qw{
 	print "ok $ok\n";
     } else {
 	print "not ok $ok\n";
-	print "We expected ", 
-	$Expect{$type}, 
-	" $type, got only ", 
-	scalar @syms, 
+	print "We expected ",
+	$Expect{$type},
+	" $type, got only ",
+	scalar @syms,
 	":\n";
 	for (@syms) {
 	    s/^main:://;
 	    print "\t", $prefices{$type}, uncontrol($_), "\n";
-	} 
+	}
     }
-} 
+}
 
 sub active_modules {
     my $ob = shift;
@@ -188,7 +193,7 @@ sub active_modules {
 	    )
 	{
 	    push @modules, $pack;
-	} 
+	}
     }
     return sort @modules;
 }
@@ -209,13 +214,13 @@ sub active_packages {
 	   )
 	{
 	    push @modules, $pack;
-	} 
-    } 
+	}
+    }
     return sort @modules;
 }
 
 
-sub uncontrol { 
+sub uncontrol {
     local $_  = $_[0];
     s/([\200-\377])/    'M-' . pack('c', ord($1) & 0177 )  /eg;
     s/([\000-\037\177])/ '^' . pack('c', ord($1) ^  64   ) /eg;
@@ -230,13 +235,13 @@ sub packsort {
         push(@vars, $name);
         push(@pax, $pack);
         push(@fullnames, $_);
-    } 
+    }
 
     return @fullnames [
-		sort { 
+		sort {
                     ($pax[$a] ne 'main::') <=> ($pax[$b] ne 'main::')
 			||
-                    $pax[$a] cmp $pax[$b] 
+                    $pax[$a] cmp $pax[$b]
                         ||
                     $vars[$a] cmp $vars[$b]
                 } 0 .. $#fullnames

@@ -8,6 +8,5 @@ WriteMakefile(
 	      DISTNAME => "Devel-Symdump",
 	      VERSION_FROM => "lib/Devel/Symdump.pm",
 	      'clean' => {FILES => '*/*/*~'},
-	      'dist' => {COMPRESS=>'gzip -9f', SUFFIX=>'gz', 
-			 DIST_DEFAULT => 'ci tardist'},
+	      'dist' => {DIST_DEFAULT => 'ci tardist'},
 	     );

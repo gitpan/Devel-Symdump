@@ -10,10 +10,10 @@ To build and install it, please run
     make test
     make install
 
-This package is Copyright (C) 1994-1997 by Andreas König. It may be
+This package is Copyright (C) 1994-2000 by Andreas König. It may be
 copied, used and redistributed under the same terms as perl itself.
 
 Enjoy,
 andreas
 
-May 16, 1997
+June 14, 2000

@@ -1,12 +1,12 @@
 package Devel::Symdump;
 
-BEGIN {require 5.003;}
+use 5.003;
 use Carp ();
 use strict;
 use vars qw($Defaults $VERSION *ENTRY);
 
-$VERSION = '2.00';
-# $Id: Symdump.pm,v 1.43 1997/05/16 11:37:31 k Exp $
+$VERSION = '2.01';
+# $Id: Symdump.pm,v 1.44 2000/06/14 08:17:57 k Exp $
 
 $Defaults = {
 	     'RECURS'   => 0,
@@ -305,7 +305,7 @@ Devel::Symdump - dump symbol names or the symbol table
     @packs = qw(some_package another_package);
     $obj = Devel::Symdump->new(@packs);        # no recursion
     $obj = Devel::Symdump->rnew(@packs);       # with recursion
-	
+
     # Methods
     @array = $obj->packages;
     @array = $obj->scalars;
@@ -316,7 +316,7 @@ Devel::Symdump - dump symbol names or the symbol table
     @array = $obj->dirhandles;   # deprecated, use ios instead
     @array = $obj->ios;
     @array = $obj->unknowns;
-	
+
     $string = $obj->as_string;
     $string = $obj->as_HTML;
     $string = $obj1->diff($obj2);
@@ -334,13 +334,13 @@ Devel::Symdump - dump symbol names or the symbol table
     @array = Devel::Symdump->ios(@packs);
     @array = Devel::Symdump->unknowns(@packs);
 
-=head1 INCOMPATIBILITY ALERT
+=head2 Incompatibility with versions before 2.00
 
 Perl 5.003 already offered the opportunity to test for the individual
 slots of a GLOB with the *GLOB{XXX} notation. Devel::Symdump version
 2.00 uses this method internally which means that the type of
 undefined values is recognized in general. Previous versions
-couldnE<39>t determine the type of undefined values, so the slot
+couldn't determine the type of undefined values, so the slot
 I<unknowns> was invented. From version 2.00 this slot is still present
 but will usually not contain any elements.
 
@@ -380,7 +380,7 @@ ios(), and unknowns() each return an array of fully qualified
 symbols of the specified type in all packages that are held within a
 Devel::Symdump object, but without the leading C<$>, C<@> or C<%>.  In
 a scalar context, they will return the number of such symbols.
-Unknown symbols are usually either formats or variables that havenE<39>t
+Unknown symbols are usually either formats or variables that haven't
 yet got a defined value.
 
 As_string() and as_HTML() return a simple string/HTML representations
@@ -393,8 +393,8 @@ as_string method.
 Isa_tree() and inh_tree() both return a simple string representation
 of the current inheritance tree. The difference between the two
 methods is the direction from which the tree is viewed: top-down or
-bottom-up. As IE<39>m sure, many users will have different expectation
-about what is top and what is bottom, IE<39>ll provide an example what
+bottom-up. As I'm sure, many users will have different expectation
+about what is top and what is bottom, I'll provide an example what
 happens when the Socket module is loaded:
 
 =over 4
@@ -428,8 +428,8 @@ indented to the right the packages that use the former.
                     AutoLoader
 
 The isa_tree method displays from left to right ISA relationships, so
-Socket IS A DynaLoader and DynaLoader IS A AutoLoader. (At least at
-the time this manpage was written :-)
+Socket IS A DynaLoader and DynaLoader IS A AutoLoader. (Actually, they
+were at the time this manpage was written)
 
 =back
 
@@ -447,8 +447,8 @@ Devel::Symdump package and turns them into functions.
 
 =head1 AUTHORS
 
-Andreas Koenig F<E<lt>koenig@franz.ww.TU-Berlin.DEE<gt>> and Tom
-Christiansen F<E<lt>tchrist@perl.comE<gt>>.  Based on the old
-F<dumpvar.pl> by Larry Wall.
+Andreas Koenig F<E<lt>andk@cpan.orgE<gt>> and Tom Christiansen
+F<E<lt>tchrist@perl.comE<gt>>. Based on the old F<dumpvar.pl> by Larry
+Wall.
 
 =cut

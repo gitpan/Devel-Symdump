@@ -1,3 +1,22 @@
+=head1 1.99_01, March 31, 1997
+
+1.99_01 is the designated 2.00.
+
+Between 1.20 and 1.23 the method as_HTML was introduced and a few code
+cleanups happened.
+
+2.00 switches implementation to use *ENTRY{XXX} internally. This means
+that we can determine scalarness even for undefined scalars. We don't
+expect unknowns anymore.
+
+2.00 introduces the new ios() method which should replace the older
+filehandles() and dirhandles() methods. For backwards compatibility
+the old methods continue to work as they used to.
+
+2.00 comes with isa_tree and inh_tree utility methods for analysing
+the inheritance tree. Devel::Symdump objects may be used to create
+snapshots, but their typical use would be as class methods.
+
 =head1 1.20, August 16th, 1995
 
 test 7 of t/symdump.t was too capricious. In fact the test was based

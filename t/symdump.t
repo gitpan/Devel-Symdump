@@ -10,13 +10,14 @@ print "1..13\n";
 
 init();
 
-%prefices = qw(
-    scalars	$
-    arrays	@
-    hashes	%
-    functions 	&
-    unknowns 	*
-);
+my %prefices = qw(
+		  scalars	$
+		  arrays	@
+		  hashes	%
+		  functions 	&
+		  unknowns 	*
+		 );
+
 @prefices{qw(filehandles dirhandles packages)}=("") x 3;
 
 
@@ -33,11 +34,15 @@ $~ = 'i_am_the_symbol_printing_format_lest_there_be_any_doubt';
 @a = packsort(filehandles('main'));
 $t = 'filehandles';
 $a = "@a";
-#write;
-if ($a eq "main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::stderr main::stdin main::stdout") {
+# write;
+if (
+    $a eq "main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::stderr main::stdin main::stdout"
+    ||
+    $a eq "main::ARGV main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::i_am_the_symbol_printing_format_lest_there_be_any_doubt main::stderr main::stdin main::stdout"
+   ) {
     print "ok 1\n";
 } else {
-    print "not ok 1\n";
+    print "not ok 1: $a\n";
 }
 
 @a = packsort(hashes 'main');
@@ -45,9 +50,9 @@ $t = 'hashes';
 $a = "@a";
 #write;
 if (
-    $a eq "main::@ main::ENV main::INC main::SIG main::prefices"
+    $a eq "main::@ main::ENV main::INC main::SIG"
     ||
-    $a eq "main::ENV main::INC main::SIG main::prefices"
+    $a eq "main::ENV main::INC main::SIG"
    ) {
     print "ok 2\n";
 } else {
@@ -125,11 +130,9 @@ if ($a eq "Carp Devel::Symdump Devel::Symdump::Export Exporter strict vars") {
 # (Time passes) Much less unknowns in version 1.22 (perl5.003_10).
 
 my %Expect=qw(
-packages 13 scalars 28 arrays 7 hashes 7 functions 35 filehandles 9
+packages 13 scalars 28 arrays 7 hashes 5 functions 35 filehandles 9
 dirhandles 2 unknowns 53
 );
-
-
 
 $ok=6;
 

@@ -1,43 +1,30 @@
-# Copyright 1994-1996 by Andreas König (see AUTHOR below)
-# This is free software.
-# Permission is granted to use and copy this piece of code under the
-# same terms as perl itself.
-
-# Major hacks by tchrist.
-
 package Devel::Symdump;
 
 BEGIN {require 5.003;}
+use Carp ();
 use strict;
-use vars qw($Defaults $VERSION $ENTRY @ENTRY %ENTRY *ENTRY %stab);
+use vars qw($Defaults $VERSION *ENTRY);
+
+$VERSION = '1.99_01';
+# $Id: Symdump.pm,v 1.42 1997/03/31 15:19:52 k Exp $
 
 $Defaults = {
-    'RECURS' => 0,
-    'AUTOLOAD' => {
-	'packages'	=> 1,
-	'scalars'	=> 1,
-	'arrays'	=> 1,
-	'hashes'	=> 1,
-	'functions'	=> 1,
-	'filehandles'	=> 1,
-	'dirhandles'	=> 1,
-	'unknowns'	=> 1,
-	}
-};
-
-$VERSION = '1.23';
-
-# $Id: Symdump.pm,v 1.32 1996/12/02 11:16:30 k Exp $
-
-$Defaults = $Defaults;
-
-use Carp;
-# use strict;
+	     'RECURS'   => 0,
+	     'AUTOLOAD' => {
+			    'packages'	=> 1,
+			    'scalars'	=> 1,
+			    'arrays'	=> 1,
+			    'hashes'	=> 1,
+			    'functions'	=> 1,
+			    'ios'	=> 1,
+			    'unknowns'	=> 1,
+			   }
+	    };
 
 sub rnew {
     my($class,@packages) = @_;
     no strict "refs";
-    my $self = bless {%${"$class\:\:Defaults"}}, $class;
+    my $self = bless {%${"$class\::Defaults"}}, $class;
     $self->{RECURS}++;
     $self->_doit(@packages);
 }
@@ -45,7 +32,7 @@ sub rnew {
 sub new {
     my($class,@packages) = @_;
     no strict "refs";
-    my $self = bless {%${"$class\:\:Defaults"}}, $class;
+    my $self = bless {%${"$class\::Defaults"}}, $class;
     $self->_doit(@packages);
 }
 
@@ -58,56 +45,62 @@ sub _doit {
 
 sub _symdump {
     my($self,@packages) = @_ ;
-    my($key,$val,$num,$pack,$package,@todo,$tmp);
+    my($key,$val,$num,$pack,@todo,$tmp);
     my $result = {};
-    foreach $package (@packages){
-	$pack = $package;
+    foreach $pack (@packages){
 	no strict;
-	local(*stab) = *{"$package\:\:"};
-	while (($key,$val) = each(%stab)) {
-	    local(*ENTRY) = $val;
+	while (($key,$val) = each(%{*{"$pack\::"}})) {
 	    my $gotone = 0;
+	    local(*ENTRY) = $val;
 	    #### SCALAR ####
-	    if (defined $ENTRY) {
+	    if (defined $val && defined *ENTRY{SCALAR}) {
 		$result->{$pack}{SCALARS}{$key}++;
 		$gotone++;
 	    }
 	    #### ARRAY ####
-	    if (defined @ENTRY) {
+	    if (defined $val && defined *ENTRY{ARRAY}) {
 		$result->{$pack}{ARRAYS}{$key}++;
 		$gotone++;
 	    }
 	    #### HASH ####
-	    if (defined %ENTRY && $key !~ /::/) {
+	    if (defined $val && defined *ENTRY{HASH} && $key !~ /::/) {
 		$result->{$pack}{HASHES}{$key}++;
 		$gotone++;
 	    }
 	    #### PACKAGE ####
-	    if (defined %ENTRY && $key =~ /::/ &&
-		    $key ne "main::" && ($tmp = "$pack\:\:") &&
-		    $tmp !~ /^$key/ )
+	    if (defined $val && defined *ENTRY{HASH} && $key =~ /::$/ &&
+		    $key ne "main::")
 	    {
-		my($p) = $pack ne "main" ? "$pack\:\:" : "";
+		my($p) = $pack ne "main" ? "$pack\::" : "";
 		($p .= $key) =~ s/::$//;
 		$result->{$pack}{PACKAGES}{$p}++;
 		$gotone++;
 		push @todo, $p;
 	    }
 	    #### FUNCTION ####
-	    if (defined &ENTRY) {
+	    if (defined $val && defined *ENTRY{CODE}) {
 		$result->{$pack}{FUNCTIONS}{$key}++;
 		$gotone++;
 	    }
-	    #### FILEHANDLE ####
-	    if (defined fileno(ENTRY)){
-		$result->{$pack}{FILEHANDLES}{$key}++;
-		$gotone++;
+
+	    #### IO #### had to change after 5.003_10
+	    if ($] > 5.003_10){
+		if (defined $val && defined *ENTRY{IO}){ # fileno and telldir...
+		    $result->{$pack}{IOS}{$key}++;
+		    $gotone++;
+		}
+	    } else {
+		#### FILEHANDLE ####
+		if (defined fileno(ENTRY)){
+		    $result->{$pack}{IOS}{$key}++;
+		    $gotone++;
+		} elsif (defined telldir(ENTRY)){
+		    #### DIRHANDLE ####
+		    $result->{$pack}{IOS}{$key}++;
+		    $gotone++;
+		}
 	    }
-	    #### DIRHANDLE ####
-	    if (defined telldir(ENTRY)){
-		$result->{$pack}{DIRHANDLES}{$key}++;
-		$gotone++;
-	    }
+
 	    #### SOMETHING ELSE ####
 	    unless ($gotone) {
 		$result->{$pack}{UNKNOWNS}{$key}++;
@@ -191,6 +184,85 @@ sub diff {
     return join "\n", @m;
 }
 
+sub inh_tree {
+    my($self) = @_;
+    return $self->{INHTREE} if ref $self && defined $self->{INHTREE};
+    my($inherited_by) = {};
+    my($m)="";
+    my(@isa) = grep /\bISA$/, Devel::Symdump->rnew->arrays;
+    my $isa;
+    foreach $isa (sort @isa) {
+	$isa =~ s/::ISA$//;
+	my($isaisa);
+	no strict 'refs';
+	foreach $isaisa (@{"$isa\::ISA"}){
+	    $inherited_by->{$isaisa}{$isa}++;
+	}
+    }
+    my $item;
+    foreach $item (sort keys %$inherited_by) {
+	$m .= "$item\n";
+	$m .= _inh_tree($item,$inherited_by);
+    }
+    $self->{INHTREE} = $m if ref $self;
+    $m;
+}
+
+sub _inh_tree {
+    my($package,$href,$depth) = @_;
+    return unless defined $href;
+    $depth ||= 0;
+    $depth++;
+    if ($depth > 100){
+	warn "Deep recursion in ISA\n";
+	return;
+    }
+    my($m) = "";
+    # print "DEBUG: package[$package]depth[$depth]\n";
+    my $i;
+    foreach $i (sort keys %{$href->{$package}}) {
+	$m .= qq{\t} x $depth;
+	$m .= qq{$i\n};
+	$m .= _inh_tree($i,$href,$depth);
+    }
+    $m;
+}
+
+sub isa_tree{
+    my($self) = @_;
+    return $self->{ISATREE} if ref $self && defined $self->{ISATREE};
+    my(@isa) = grep /\bISA$/, Devel::Symdump->rnew->arrays;
+    my($m) = "";
+    my($isa);
+    foreach $isa (sort @isa) {
+	$isa =~ s/::ISA$//;
+	$m .= qq{$isa\n};
+	$m .= _isa_tree($isa)
+    }
+    $self->{ISATREE} = $m if ref $self;
+    $m;
+}
+
+sub _isa_tree{
+    my($package,$depth) = @_;
+    $depth ||= 0;
+    $depth++;
+    if ($depth > 100){
+	warn "Deep recursion in ISA\n";
+	return;
+    }
+    my($m) = "";
+    # print "DEBUG: package[$package]depth[$depth]\n";
+    my $isaisa;
+    no strict 'refs';
+    foreach $isaisa (@{"$package\::ISA"}) {
+	$m .= qq{\t} x $depth;
+	$m .= qq{$isaisa\n};
+	$m .= _isa_tree($isaisa,$depth);
+    }
+    $m;
+}
+
 AUTOLOAD {
     my($self,@packages) = @_;
     unless (ref $self) {
@@ -199,11 +271,22 @@ AUTOLOAD {
     no strict "vars";
     (my $auto = $AUTOLOAD) =~ s/.*:://;
 
+    $auto =~ s/(file|dir)handles/ios/;
+    my $compat = $1;
+
     unless ($self->{'AUTOLOAD'}{$auto}) {
-	croak "invalid Devel::Symdump method: $auto()";
+	Carp::croak("invalid Devel::Symdump method: $auto()");
     }
 
     my @syms = $self->_partdump(uc $auto);
+    if (defined $compat) {
+	no strict 'refs';
+	if ($compat eq "file") {
+	    @syms = grep { defined(fileno($_)) } @syms;
+	} else {
+	    @syms = grep { defined(telldir($_)) } @syms;
+	}
+    }
     return @syms; # make sure now it gets context right
 }
 
@@ -229,13 +312,17 @@ Devel::Symdump - dump symbol names or the symbol table
     @array = $obj->arrays;
     @array = $obj->hashs;
     @array = $obj->functions;
-    @array = $obj->filehandles;
-    @array = $obj->dirhandles;
+    @array = $obj->filehandles;  # deprecated, use ios instead
+    @array = $obj->dirhandles;   # deprecated, use ios instead
+    @array = $obj->ios;
     @array = $obj->unknowns;
 	
     $string = $obj->as_string;
     $string = $obj->as_HTML;
     $string = $obj1->diff($obj2);
+
+    $string = $obj->isa_tree;    # or Devel::Symdump->isa_tree
+    $string = $obj->inh_tree;    # or Devel::Symdump->inh_tree
 
     # Methods with autogenerated objects
     # all of those call new(@packs) internally
@@ -244,9 +331,29 @@ Devel::Symdump - dump symbol names or the symbol table
     @array = Devel::Symdump->arrays(@packs);
     @array = Devel::Symdump->hashes(@packs);
     @array = Devel::Symdump->functions(@packs);
-    @array = Devel::Symdump->filehandles(@packs);
-    @array = Devel::Symdump->dirhandles(@packs);
+    @array = Devel::Symdump->ios(@packs);
     @array = Devel::Symdump->unknowns(@packs);
+
+=head1 INCOMPATIBILITY ALERT
+
+Perl 5.003 already offered the opportunity to test for the individual
+slots of a GLOB with the *GLOB{XXX} notation. Devel::Symdump version
+2.00 uses this method internally which means that the type of
+undefined values is recognized in general. Previous versions
+couldnE<39>t determine the type of undefined values, so the slot
+I<unknowns> was invented. From version 2.00 this slot is still present
+but will usually not contain any elements.
+
+The interface has changed slightly between the perl versions 5.003 and
+5.004. To be precise, from perl5.003_11 the names of the members of a
+GLOB have changed. C<IO> is the internal name for all kinds of
+input-output handles while C<FILEHANDLE> and C<DIRHANDLE> are
+deprecated.
+
+C<Devel::Symdump> accordingly introduces the new method ios() which
+returns filehandles B<and> directory handles. The old methods
+filehandles() and dirhandles() are still supported for a transitional
+period.  They will probably have to go in future versions.
 
 =head1 DESCRIPTION
 
@@ -255,29 +362,80 @@ This little package serves to access the symbol table of perl.
 =over 4
 
 =head2 C<Devel::Symdump-E<gt>rnew(@packages)>
+
 returns a symbol table object for all subtrees below @packages.
 Nested Modules are analyzed recursively. If no package is given as
 argument, it defaults to C<main>. That means to get the whole symbol
 table, just do a C<rnew> without arguments.
 
 =head2 C<Devel::Symdump-E<gt>new(@packages)>
+
 does not go into recursion and only analyzes the packages that are
 given as arguments.
 
-The methods packages(), scalars(), arrays(), hashes(), functions(),
-filehandles(), dirhandles(), and unknowns() each return an array of
-fully qualified symbols of the specified type in all packages that are
-held within a Devel::Symdump object, but without the leading C<$>,
-C<@> or C<%>.  In a scalar context, they will return the number of
-such symbols.  Unknown symbols are usually either formats or variables
-that haven't yet got a defined value.
+=back
 
-As_string() and as_HTML() print simple string/HTML representations of
-the object.
+The methods packages(), scalars(), arrays(), hashes(), functions(),
+ios(), and unknowns() each return an array of fully qualified
+symbols of the specified type in all packages that are held within a
+Devel::Symdump object, but without the leading C<$>, C<@> or C<%>.  In
+a scalar context, they will return the number of such symbols.
+Unknown symbols are usually either formats or variables that havenE<39>t
+yet got a defined value.
+
+As_string() and as_HTML() return a simple string/HTML representations
+of the object.
 
 Diff() prints the difference between two Devel::Symdump objects in
 human readable form. The format is similar to the one used by the
 as_string method.
+
+Isa_tree() and inh_tree() both return a simple string representation
+of the current inheritance tree. The difference between the two
+methods is the direction from which the tree is viewed: top-down or
+bottom-up. As IE<39>m sure, many users will have different expectation
+about what is top and what is bottom, IE<39>ll provide an example:
+
+=over 4
+
+=item % perl -MDevel::Symdump -MSocket -le 'print Devel::Symdump->inh_tree'      
+
+    AutoLoader
+            DynaLoader
+                    Socket
+    DynaLoader
+            Socket
+    Exporter
+            Carp
+            Config
+            Socket
+
+The inh_tree method shows on the left hand side a package name and
+indented to the right the packages that use the former.
+
+=item % perl -MDevel::Symdump -MSocket -le 'print Devel::Symdump->isa_tree'
+
+    Carp
+            Exporter
+    Config
+            Exporter
+    DynaLoader
+            AutoLoader
+    Socket
+            Exporter
+            DynaLoader
+                    AutoLoader
+
+The isa_tree method displays from left to right ISA relationships, so
+IS Socket A DynaLoader and DynaLoader IS A AutoLoader. (At least at
+the time this manpage was written :-)
+
+=back
+
+You may call both methods, isa_tree() and inh_tree(), with an
+object. If you do that, the object will store the output and retrieve
+it when you call the same method again later. The typical usage would
+be to use them as class methods directly though.
 
 =head1 SUBCLASSING
 
@@ -294,6 +452,6 @@ F<dumpvar.pl> by Larry Wall.
 
 =head1 VERSION
 
-This release is $Revision: 1.32 $.
+This release is $Revision: 1.42 $.
 
 =cut

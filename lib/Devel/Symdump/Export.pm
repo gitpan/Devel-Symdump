@@ -12,6 +12,7 @@ use Carp;
 	'functions'	,
 	'filehandles'	,
 	'dirhandles'	,
+	'ios'           ,
 	'unknowns'	,
 );
 my %OK;

@@ -1,0 +1,87 @@
+------------------------------------------------------------------------
+r11 | k | 2005-12-25 07:17:16 +0100 (Sun, 25 Dec 2005) | 2 lines
+Changed paths:
+   M /trunk/Makefile.PL
+
+release better with debian perl and -I
+
+------------------------------------------------------------------------
+r10 | k | 2005-12-25 07:13:29 +0100 (Sun, 25 Dec 2005) | 2 lines
+Changed paths:
+   M /trunk/MANIFEST
+
+podcover
+
+------------------------------------------------------------------------
+r9 | k | 2005-12-25 07:12:20 +0100 (Sun, 25 Dec 2005) | 2 lines
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/MANIFEST
+
+blah
+
+------------------------------------------------------------------------
+r8 | k | 2005-12-25 07:07:26 +0100 (Sun, 25 Dec 2005) | 1 line
+Changed paths:
+   A /trunk/ChangeLog.local
+   M /trunk/README
+
+
+------------------------------------------------------------------------
+r7 | k | 2005-12-25 07:06:18 +0100 (Sun, 25 Dec 2005) | 2 lines
+Changed paths:
+   M /trunk/Makefile.PL
+
+first stab
+
+------------------------------------------------------------------------
+r6 | k | 2005-12-25 06:58:23 +0100 (Sun, 25 Dec 2005) | 1 line
+Changed paths:
+   M /trunk/MANIFEST
+   M /trunk/lib/Devel/Symdump.pm
+   A /trunk/t/pod.t
+   A /trunk/t/podcover.t
+   A /trunk/t/recur.t
+
+Fix rt.cpan.org #8766--recursion; add tests for recursion, pod, podcover
+------------------------------------------------------------------------
+r5 | k | 2005-12-25 05:15:02 +0100 (Sun, 25 Dec 2005) | 1 line
+Changed paths:
+   M /trunk/lib/Devel/Symdump/Export.pm
+
+fix strict
+------------------------------------------------------------------------
+r4 | k | 2005-12-25 04:59:41 +0100 (Sun, 25 Dec 2005) | 1 line
+Changed paths:
+   A /trunk/ChangeLog
+   A /trunk/MANIFEST
+   A /trunk/MANIFEST.SKIP
+   A /trunk/Makefile.PL
+   A /trunk/README
+   A /trunk/benchmark
+   A /trunk/benchmark/benchmark.out
+   A /trunk/benchmark/benchmark.pl
+   A /trunk/lib
+   A /trunk/lib/Devel
+   A /trunk/lib/Devel/Symdump
+   A /trunk/lib/Devel/Symdump/Export.pm
+   A /trunk/lib/Devel/Symdump.pm
+   A /trunk/t
+   A /trunk/t/autogen.t
+   A /trunk/t/diff.t
+   A /trunk/t/export.t
+   A /trunk/t/symdump.t
+   A /trunk/t/tree.t
+
+starting in subversion without history
+------------------------------------------------------------------------
+r1 | k | 2005-12-25 04:55:42 +0100 (Sun, 25 Dec 2005) | 1 line
+Changed paths:
+   A /trunk
+
+
+------------------------------------------------------------------------
+
+Local Variables:
+mode: text
+End:

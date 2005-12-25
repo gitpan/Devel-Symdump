@@ -1,3 +1,15 @@
+2005-12-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Export.pm now strict clean
+
+	* Makefile.PL up to date
+
+	* added ChangeLog.svn
+
+	* added tests for recursion, pod, podcover
+
+	* Fixed rt.cpan.org #8766--recursion
+
 2002-03-01  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* lib/Devel/Symdump.pm: perl 5.6.1 introduced a package name of
@@ -23,87 +35,102 @@
 	* Fixed the test 6 in t/symdump.t. This test was broken by
 	perl-5.6.0 but not Devel::Symdump itself.
 
+1997-05-16  Andreas Koenig
 
+	* Release 2.00
 
-=head1 2.00, May 16, 1997
+	* Fixed typos in the manpage, added a test for tree, no functional
+	change, released 2.00.
 
-Fixed typos in the manpage, added a test for tree, no functional
-change, released 2.00.
+1997-03-31  Andreas Koenig
 
-=head1 1.99_01, March 31, 1997
+	* 1.99_01
 
-1.99_01 is the designated 2.00.
+	* 1.99_01 is the designated 2.00.
 
-Between 1.20 and 1.23 the method as_HTML was introduced and a few code
-cleanups happened.
+	* Between 1.20 and 1.23 the method as_HTML was introduced and a
+	few code cleanups happened.
 
-2.00 switches implementation to use *ENTRY{XXX} internally. This means
-that we can determine scalarness even for undefined scalars. We don't
-expect unknowns anymore.
+	* 2.00 switches implementation to use *ENTRY{XXX} internally. This
+	means that we can determine scalarness even for undefined scalars.
+	We don't expect unknowns anymore.
 
-2.00 introduces the new ios() method which should replace the older
-filehandles() and dirhandles() methods. For backwards compatibility
-the old methods continue to work as they used to.
+	* 2.00 introduces the new ios() method which should replace the
+	older filehandles() and dirhandles() methods. For backwards
+	compatibility the old methods continue to work as they used to.
 
-2.00 comes with isa_tree and inh_tree utility methods for analysing
-the inheritance tree. Devel::Symdump objects may be used to create
-snapshots, but their typical use would be as class methods.
+	* 2.00 comes with isa_tree and inh_tree utility methods for
+	analysing the inheritance tree. Devel::Symdump objects may be used
+	to create snapshots, but their typical use would be as class
+	methods.
 
-=head1 1.20, August 16th, 1995
+1995-08-16  Andreas Koenig
 
-test 7 of t/symdump.t was too capricious. In fact the test was based
-on wrong assumptions about loaded packages in the perl binary. Static
-perls and dynamic perls have different symbol tables when they run the
-tests. So test 7 is gone.
+	* 1.20
 
-test 4 of t/symdump.t relied on $@ being set like in perl5.001m. This
-might not be a correct assumption. So test 4 is replaced with a dummy
-'print ok' until the $@ problem is sorted out
+	* test 7 of t/symdump.t was too capricious. In fact the test was
+	based on wrong assumptions about loaded packages in the perl
+	binary. Static perls and dynamic perls have different symbol
+	tables when they run thetests. So test 7 is gone.
 
-=head1 1.19, July 3rd, 1995
+	* test 4 of t/symdump.t relied on $@ being set like in perl5.001m.
+	This might not be a correct assumption. So test 4 is replaced with
+	a dummy 'print ok' until the $@ problem is sorted out
 
-Added an as_string method.
+1995-07-03  Andreas Koenig
 
-Rewrote the test scripts so they output standard test strings "ok
-nnn". This is dangerous for new perl releases, but will help me do get
-bug reports early.
+	* 1.19
 
-Renamed the exporting example package to Devel::Symdump::Export.
+	* Added an as_string method.
 
-=head1 1.16, May 29th, 1995
+	* Rewrote the test scripts so they output standard test strings
+	"ok nnn". This is dangerous for new perl releases, but will help
+	me do get bug reports early.
 
-Changed '${pack}::' and relatives back to "$pack\:\:" to make the
-package "-w" safe. Deleted the debug statement in _doit() after
-Gurusamy Sarathy fixed the bug in perl5.001, but left a comment there.
+	* Renamed the exporting example package to Devel::Symdump::Export.
 
-Changed the AUTHORS section to plain "Andreas & Tom".
+1995-05-29  Andreas Koenig
 
-Added this Changes file :)
+	* 1.16
 
-=head1 1.14, May 28th,1995
+	* Changed '${pack}::' and relatives back to "$pack\:\:" to make
+	the package "-w" safe. Deleted the debug statement in _doit()
+	after Gurusamy Sarathy fixed the bug in perl5.001, but left a
+	comment there.
 
-After a considerable amount of mail exchange between Tom and me, we
-now have a unknowns() method for all the rest in the symbol table that
-we currently don't follow further. new() is renamed to rnew() which
-stands for recursive new. new() now does not go into recursion which
-becomes the default behaviour for people calling directly
-Devel::Symdump->arrays etc.
+	* Changed the AUTHORS section to plain "Andreas & Tom".
 
-Added a Devel::Symdump::Exp package for Tom who wanted the methods
-exported. Tom had tried to add Exporter to the package and to export
-the undefined methods directly. Andreas didn't trust this trick
-although it seemed to work fine. So they are still considering if it
-can be done.
+	* Added this Changes file :)
 
+1995-05-28  Andreas Koenig
 
-=head1 1.09, May 27th, 1995
+	* 1.14
 
-Drops all prettyprint functionality and becomes a primitiv package
-after some talk with Tom Christiansen and Gurusamy Sarathy. Moreover,
-Dean Roehrich's additions to the perlbot manpage gave me (Andreas)
-some hints about package globals which now get a new dress within the
-object.
+	* After a considerable amount of mail exchange between Tom and me,
+	we now have a unknowns() method for all the rest in the symbol
+	table that we currently don't follow further. new() is renamed to
+	rnew() which stands for recursive new. new() now does not go into
+	recursion which becomes the default behaviour for people calling
+	directly Devel::Symdump->arrays etc.
 
-=head1 1.05, May 1995
+	* Added a Devel::Symdump::Exp package for Tom who wanted the
+	methods exported. Tom had tried to add Exporter to the package and
+	to export the undefined methods directly. Andreas didn't trust
+	this trick although it seemed to work fine. So they are still
+	considering if it can be done.
 
-First release of the formerly Devel::Debug called package.
+1995-05-27  Andreas Koenig
+
+	* 1.09
+
+	* Drops all prettyprint functionality and becomes a primitiv
+	package after some talk with Tom Christiansen and Gurusamy
+	Sarathy. Moreover, Dean Roehrich's additions to the perlbot
+	manpage gave me (Andreas) some hints about package globals which
+	now get a new dress within the object.
+
+1995-05-xx  Andreas Koenig
+
+	* 1.05
+
+	* First release of the formerly Devel::Debug called package.

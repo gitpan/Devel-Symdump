@@ -3,10 +3,10 @@ package Devel::Symdump;
 use 5.003;
 use Carp ();
 use strict;
-use vars qw($Defaults $VERSION *ENTRY);
+use vars qw($Defaults $VERSION *ENTRY $MAX_RECURSION);
 
-$VERSION = '2.03';
-# $Id: Symdump.pm,v 1.46 2002/04/18 20:09:38 k Exp $
+$VERSION = '2.04';
+$MAX_RECURSION = 97;
 
 $Defaults = {
 	     'RECURS'   => 0,
@@ -18,7 +18,8 @@ $Defaults = {
 			    'functions'	=> 1,
 			    'ios'	=> 1,
 			    'unknowns'	=> 1,
-			   }
+			   },
+             'SEEN' => {},
 	    };
 
 sub rnew {
@@ -69,12 +70,14 @@ sub _symdump {
 	    }
 	    #### PACKAGE ####
 	    if (defined $val && defined *ENTRY{HASH} && $key =~ /::$/ &&
-		    $key ne "main::" && $key ne "<none>::")
-	    {
-		my($p) = $pack ne "main" ? "$pack\::" : "";
-		($p .= $key) =~ s/::$//;
-		$result->{$pack}{PACKAGES}{$p}++;
-		$gotone++;
+                $key ne "main::" && $key ne "<none>::") {
+                my($p) = $pack ne "main" ? "$pack\::" : "";
+                ($p .= $key) =~ s/::$//;
+                $result->{$pack}{PACKAGES}{$p}++;
+                $gotone++;
+                if (++$self->{SEEN}{*$val} > $Devel::Symdump::MAX_RECURSION){
+                    next;
+                }
 		push @todo, $p;
 	    }
 	    #### FUNCTION ####
@@ -315,7 +318,7 @@ Devel::Symdump - dump symbol names or the symbol table
     @array = $obj->filehandles;  # deprecated, use ios instead
     @array = $obj->dirhandles;   # deprecated, use ios instead
     @array = $obj->ios;
-    @array = $obj->unknowns;
+    @array = $obj->unknowns;     # only perl version < 5.003 had some
 
     $string = $obj->as_string;
     $string = $obj->as_HTML;
@@ -334,61 +337,55 @@ Devel::Symdump - dump symbol names or the symbol table
     @array = Devel::Symdump->ios(@packs);
     @array = Devel::Symdump->unknowns(@packs);
 
-=head2 Incompatibility with versions before 2.00
-
-Perl 5.003 already offered the opportunity to test for the individual
-slots of a GLOB with the *GLOB{XXX} notation. Devel::Symdump version
-2.00 uses this method internally which means that the type of
-undefined values is recognized in general. Previous versions
-couldn't determine the type of undefined values, so the slot
-I<unknowns> was invented. From version 2.00 this slot is still present
-but will usually not contain any elements.
-
-The interface has changed slightly between the perl versions 5.003 and
-5.004. To be precise, from perl5.003_11 the names of the members of a
-GLOB have changed. C<IO> is the internal name for all kinds of
-input-output handles while C<FILEHANDLE> and C<DIRHANDLE> are
-deprecated.
-
-C<Devel::Symdump> accordingly introduces the new method ios() which
-returns filehandles B<and> directory handles. The old methods
-filehandles() and dirhandles() are still supported for a transitional
-period.  They will probably have to go in future versions.
-
 =head1 DESCRIPTION
 
 This little package serves to access the symbol table of perl.
 
 =over 4
 
-=head2 C<Devel::Symdump-E<gt>rnew(@packages)>
+=item C<Devel::Symdump-E<gt>rnew(@packages)>
 
 returns a symbol table object for all subtrees below @packages.
 Nested Modules are analyzed recursively. If no package is given as
 argument, it defaults to C<main>. That means to get the whole symbol
 table, just do a C<rnew> without arguments.
 
-=head2 C<Devel::Symdump-E<gt>new(@packages)>
+The global variable $Devel::Symdump::MAX_RECURSION limits the
+recursion to prevent contention. The default value is set to 97, just
+low enough to survive the test suite without a warning about deep
+recursion.
+
+=item C<Devel::Symdump-E<gt>new(@packages)>
 
 does not go into recursion and only analyzes the packages that are
 given as arguments.
 
-=back
+=item packages, scalars, arrays, hashes, functions, ios
 
 The methods packages(), scalars(), arrays(), hashes(), functions(),
-ios(), and unknowns() each return an array of fully qualified
-symbols of the specified type in all packages that are held within a
-Devel::Symdump object, but without the leading C<$>, C<@> or C<%>.  In
-a scalar context, they will return the number of such symbols.
-Unknown symbols are usually either formats or variables that haven't
-yet got a defined value.
+ios(), and (for older perls) unknowns() each return an array of fully
+qualified symbols of the specified type in all packages that are held
+within a Devel::Symdump object, but without the leading C<$>, C<@> or
+C<%>. In a scalar context, they will return the number of such
+symbols. Unknown symbols are usually either formats or variables that
+haven't yet got a defined value.
+
+=item as_string
+
+=item as_HTML
 
 As_string() and as_HTML() return a simple string/HTML representations
 of the object.
 
+=item diff
+
 Diff() prints the difference between two Devel::Symdump objects in
 human readable form. The format is similar to the one used by the
 as_string method.
+
+=item isa_tree
+
+=item inh_tree
 
 Isa_tree() and inh_tree() both return a simple string representation
 of the current inheritance tree. The difference between the two
@@ -396,8 +393,6 @@ methods is the direction from which the tree is viewed: top-down or
 bottom-up. As I'm sure, many users will have different expectation
 about what is top and what is bottom, I'll provide an example what
 happens when the Socket module is loaded:
-
-=over 4
 
 =item % print Devel::Symdump-E<gt>inh_tree
 
@@ -452,3 +447,9 @@ F<E<lt>tchrist@perl.comE<gt>>. Based on the old F<dumpvar.pl> by Larry
 Wall.
 
 =cut
+
+
+# Local Variables:
+# mode: cperl
+# cperl-indent-level: 4
+# End:

@@ -1,4 +1,14 @@
+2006-01-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 2.05
+
+	* fix the testcase for recursion so that it compiles and works
+	also after patch 26370 to perl after which stashes are not
+	autovivified anymore.
+
 2005-12-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 2.04
 
 	* Export.pm now strict clean
 

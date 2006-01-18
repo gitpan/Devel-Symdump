@@ -1,4 +1,33 @@
 ------------------------------------------------------------------------
+r18 | k | 2006-01-18 05:57:47 +0100 (Wed, 18 Jan 2006) | 1 line
+Changed paths:
+   M /trunk/Makefile.PL
+
+let Debian's pod2text do the work, mine is broken
+------------------------------------------------------------------------
+r17 | k | 2006-01-18 05:53:21 +0100 (Wed, 18 Jan 2006) | 2 lines
+Changed paths:
+   M /trunk/README
+   M /trunk/lib/Devel/Symdump.pm
+
+Maybe it was the E in the pod that made pod2text die?
+
+------------------------------------------------------------------------
+r16 | k | 2006-01-18 05:47:37 +0100 (Wed, 18 Jan 2006) | 2 lines
+Changed paths:
+   M /trunk/Makefile.PL
+
+Let pod2man be run from current perl
+
+------------------------------------------------------------------------
+r15 | k | 2006-01-18 05:44:20 +0100 (Wed, 18 Jan 2006) | 3 lines
+Changed paths:
+   M /trunk/lib/Devel/Symdump.pm
+
+New warning in perl suppressed
+
+
+------------------------------------------------------------------------
 r14 | k | 2006-01-02 22:30:57 +0100 (Mon, 02 Jan 2006) | 2 lines
 Changed paths:
    M /trunk/README

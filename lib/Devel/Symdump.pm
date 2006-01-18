@@ -5,7 +5,7 @@ use Carp ();
 use strict;
 use vars qw($Defaults $VERSION *ENTRY $MAX_RECURSION);
 
-$VERSION = '2.05';
+$VERSION = '2.06';
 $MAX_RECURSION = 97;
 
 $Defaults = {
@@ -284,6 +284,7 @@ AUTOLOAD {
     my @syms = $self->_partdump(uc $auto);
     if (defined $compat) {
 	no strict 'refs';
+        local $^W; # bleadperl@26631 introduced an io warning here
 	if ($compat eq "file") {
 	    @syms = grep { defined(fileno($_)) } @syms;
 	} else {
@@ -442,8 +443,8 @@ Devel::Symdump package and turns them into functions.
 
 =head1 AUTHORS
 
-Andreas Koenig F<E<lt>andk@cpan.orgE<gt>> and Tom Christiansen
-F<E<lt>tchrist@perl.comE<gt>>. Based on the old F<dumpvar.pl> by Larry
+Andreas Koenig F<< <andk@cpan.org> >> and Tom Christiansen
+F<< <tchrist@perl.com> >>. Based on the old F<dumpvar.pl> by Larry
 Wall.
 
 =cut

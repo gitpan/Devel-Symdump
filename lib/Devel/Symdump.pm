@@ -5,7 +5,7 @@ use Carp ();
 use strict;
 use vars qw($Defaults $VERSION *ENTRY $MAX_RECURSION);
 
-$VERSION = '2.06';
+$VERSION = '2.0601';
 $MAX_RECURSION = 97;
 
 $Defaults = {
@@ -446,6 +446,18 @@ Devel::Symdump package and turns them into functions.
 Andreas Koenig F<< <andk@cpan.org> >> and Tom Christiansen
 F<< <tchrist@perl.com> >>. Based on the old F<dumpvar.pl> by Larry
 Wall.
+
+=head1 COPYRIGHT, LICENSE
+
+This module is
+
+Copyright (c) 1995, 1997, 2000, 2002, 2005, 2006 Andreas Koenig C<< <andk@cpan.org> >>.
+
+All rights reserved.
+
+This library is free software;
+you may use, redistribute and/or modify it under the same
+terms as Perl itself.
 
 =cut
 

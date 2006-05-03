@@ -127,3 +127,14 @@ AUTHORS
     Andreas Koenig <andk@cpan.org> and Tom Christiansen <tchrist@perl.com>.
     Based on the old dumpvar.pl by Larry Wall.
 
+COPYRIGHT, LICENSE
+    This module is
+
+    Copyright (c) 1995, 1997, 2000, 2002, 2005, 2006 Andreas Koenig
+    "<andk@cpan.org>".
+
+    All rights reserved.
+
+    This library is free software; you may use, redistribute and/or modify
+    it under the same terms as Perl itself.
+

@@ -50,6 +50,8 @@ $t = 'hashes';
 $a = uncontrol("@a");
 #write;
 if (
+    $a eq "main::^H main::@ main::ENV main::INC main::SIG"
+    ||
     $a eq "main::@ main::ENV main::INC main::SIG"
     ||
     $a eq "main::ENV main::INC main::SIG"

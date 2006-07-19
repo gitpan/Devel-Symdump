@@ -1,3 +1,22 @@
+2006-07-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 2.0602
+
+	* adjust test suite to accept new variable in bleadperl, the hash
+	$main::^H
+
+2006-05-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 2.0601
+
+	* add copyright and license
+
+2006-01-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 2.06
+
+	* New warnings in bleadperl now suppressed; minor pod issues fixed
+
 2006-01-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 2.05

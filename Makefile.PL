@@ -126,6 +126,7 @@ sign:
 	cpansign -s
 
 howto-release:
+	@$(ECHO) manually set version in Symdump.pm, edit ChangeLog
 	@$(ECHO) make ci dist \&\& make release
 }
 }

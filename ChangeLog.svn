@@ -1,4 +1,26 @@
 ------------------------------------------------------------------------
+r23 | k | 2006-07-19 05:06:25 +0200 (Wed, 19 Jul 2006) | 2 lines
+Changed paths:
+   M /trunk/ChangeLog
+   M /trunk/Makefile.PL
+   M /trunk/lib/Devel/Symdump.pm
+
+Prepare release 2.0602
+
+------------------------------------------------------------------------
+r22 | k | 2006-07-19 04:55:05 +0200 (Wed, 19 Jul 2006) | 2 lines
+Changed paths:
+   M /trunk/t/symdump.t
+
+bleadperl has $^H around, another hash in main
+
+------------------------------------------------------------------------
+r21 | k | 2006-05-04 09:23:43 +0200 (Thu, 04 May 2006) | 1 line
+Changed paths:
+   M /trunk/README
+
+blah
+------------------------------------------------------------------------
 r20 | k | 2006-05-03 05:08:59 +0200 (Wed, 03 May 2006) | 1 line
 Changed paths:
    M /trunk/lib/Devel/Symdump.pm

@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.51.
+signed via the Module::Signature module, version 0.55.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -14,13 +14,13 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 595ea093e83560c5e26f7ba2c7ebabb859f2b4d0 ChangeLog
-SHA1 18009dca3e826b27625ee4f67466ca80894fe547 ChangeLog.svn
+SHA1 92e793c23849329da6b07d096aa788e7abc8854a ChangeLog
+SHA1 44a7e8d28e29382caebba79c5b887081a1230fbe ChangeLog.svn
 SHA1 57c703a831e1f5ff653e6030716b9280baea9e2a MANIFEST
-SHA1 88d26dbab9074013ade79ea0b3c033b52a760120 META.yml
-SHA1 c3e29e66e9f0b531065cc45a80cb87e5435e476c Makefile.PL
+SHA1 058fbca7df37481608e5cd1d0255299be8879108 META.yml
+SHA1 742c6c40946a8a64198a9426f10f707e8f4fca5a Makefile.PL
 SHA1 35d8e1b8675e6acc3d66307ab11b39b5641f5725 README
-SHA1 fe199d277490d94ce832f3ea07323ab98c31faa4 lib/Devel/Symdump.pm
+SHA1 64a4419cb9a7be5abd69ccd36bb8e23b8b327941 lib/Devel/Symdump.pm
 SHA1 fef2e4c5ea88bd09f2af618e32a58ee87be965a4 lib/Devel/Symdump/Export.pm
 SHA1 08075038f75f26eeac19654d9cc0d96c729c23d7 t/autogen.t
 SHA1 ac80cb093bffdce80ea28209197e58ec40b0cdd4 t/diff.t
@@ -31,9 +31,9 @@ SHA1 6a5c613f95f051fbac7aefffa2eadc7abca754bf t/recur.t
 SHA1 4e91bacb24a2264f28b5ff1830a7a5bb78911a02 t/symdump.t
 SHA1 d7e8e57a5c9676c8fd716b6b0fe13559c83d8711 t/tree.t
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.3 (GNU/Linux)
+Version: GnuPG v1.4.5 (GNU/Linux)
 
-iD8DBQFEvaHE7IA58KMXwV0RAqmGAJ966Cyjgm+hdNGnzxkl1ntVkCs0ugCg8RsE
-BGZd/EhBNGO/GAiUgEnXF74=
-=Rd+0
+iD8DBQFFEaXu7IA58KMXwV0RAoPeAKDrot36tuAxOeaMKd3Ve/GOEB8mYgCgoAL9
+aDLKTpbYNeyyn/D+XsMleB8=
+=i1Na
 -----END PGP SIGNATURE-----

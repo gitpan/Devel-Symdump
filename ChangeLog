@@ -1,3 +1,9 @@
+2006-09-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* relase 2.0603
+
+	* add LICENSE field to Makefile.PL to also have it in the META.yml
+
 2006-07-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 2.0602

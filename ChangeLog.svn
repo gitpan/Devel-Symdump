@@ -1,4 +1,23 @@
 ------------------------------------------------------------------------
+r26 | k | 2006-09-20 22:34:18 +0200 (Wed, 20 Sep 2006) | 1 line
+Changed paths:
+   M /trunk/Makefile.PL
+
+wrongly done, the $VERSION = eval $VERSION thing, was not always biting
+------------------------------------------------------------------------
+r25 | k | 2006-09-20 22:26:43 +0200 (Wed, 20 Sep 2006) | 1 line
+Changed paths:
+   M /trunk/ChangeLog
+
+prepare for 2.0603 that shall have LICENSE in the META.yaml
+------------------------------------------------------------------------
+r24 | k | 2006-09-20 22:24:27 +0200 (Wed, 20 Sep 2006) | 1 line
+Changed paths:
+   M /trunk/Makefile.PL
+   M /trunk/lib/Devel/Symdump.pm
+
+prepare for 2.0603 that shall have LICENSE in the META.yaml
+------------------------------------------------------------------------
 r23 | k | 2006-07-19 05:06:25 +0200 (Wed, 19 Jul 2006) | 2 lines
 Changed paths:
    M /trunk/ChangeLog

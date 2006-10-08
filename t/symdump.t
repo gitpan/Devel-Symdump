@@ -50,7 +50,9 @@ $t = 'hashes';
 $a = uncontrol("@a");
 #write;
 if (
-    $a eq "main::^H main::@ main::ENV main::INC main::SIG"
+    $a eq "main::^H main::+ main::@ main::ENV main::INC main::SIG" # + named capture 28957
+    ||
+    $a eq "main::^H main::@ main::ENV main::INC main::SIG"         # ^H hints 27643 (?)
     ||
     $a eq "main::@ main::ENV main::INC main::SIG"
     ||
@@ -209,7 +211,7 @@ sub active_packages {
 	     $pob->arrays()	||
 	     $pob->functions()	||
 	     $pob->filehandles()||
-	     $pob->dirhandles()	
+	     $pob->dirhandles()
 	   )
 	{
 	    push @modules, $pack;

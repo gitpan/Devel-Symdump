@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Devel-Symdump
-version:             2.0603
+version:             2.0604
 abstract:            ~
 license:             perl
 generated_by:        ExtUtils::MakeMaker version 6.3004

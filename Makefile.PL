@@ -93,6 +93,9 @@ WriteMakefile(
               ($ExtUtils::MakeMaker::VERSION >= 6.3001 ?
                (LICENSE      => "perl") : (),
               ),
+              PREREQ_PM => {
+                            'Test::More' => 0,
+                           },
 	      'clean' => {FILES => '*/*/*~'},
               'dist' => {
                          DIST_DEFAULT => 'Makefile setversion README all chlog tardist',

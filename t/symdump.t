@@ -1,12 +1,13 @@
 #!/usr/bin/perl -w
 
 BEGIN { unshift @INC, '.' ;
-$SIG{__WARN__}=sub {return "" if $_[0] =~ /used only once/; print @_;};
+        $SIG{__WARN__}=sub {return "" if $_[0] =~ /used only once/; print @_;};
 }
 
 use Devel::Symdump::Export qw(filehandles hashes arrays);
+use Test::More;
 
-print "1..13\n";
+plan tests => 13;
 
 init();
 
@@ -35,98 +36,69 @@ $~ = 'i_am_the_symbol_printing_format_lest_there_be_any_doubt';
 $t = 'filehandles';
 $a = "@a";
 # write;
-if (
+ok (
     $a eq "main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::stderr main::stdin main::stdout"
     ||
-    $a eq "main::ARGV main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::i_am_the_symbol_printing_format_lest_there_be_any_doubt main::stderr main::stdin main::stdout"
-   ) {
-    print "ok 1\n";
-} else {
-    print "not ok 1: $a\n";
-}
+    $a eq "main::ARGV main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::i_am_the_symbol_printing_format_lest_there_be_any_doubt main::stderr main::stdin main::stdout",
+    $a
+   );
 
 @a = packsort(hashes 'main');
 $t = 'hashes';
 $a = uncontrol("@a");
+$a =~ s/main:://g;
 #write;
-if (
-    $a eq "main::^H main::+ main::@ main::ENV main::INC main::SIG" # + named capture 28957
+ok (
+    $a eq "^H + - @ ENV INC SIG" # + named capture 29682
     ||
-    $a eq "main::^H main::@ main::ENV main::INC main::SIG"         # ^H hints 27643 (?)
+    $a eq "^H + @ ENV INC SIG"   # + named capture 28957
     ||
-    $a eq "main::@ main::ENV main::INC main::SIG"
+    $a eq "^H @ ENV INC SIG"     # ^H hints 27643 (?)
     ||
-    $a eq "main::ENV main::INC main::SIG"
-   ) {
-    print "ok 2\n";
-} else {
-    print "not ok 2: $a\n";
-}
+    $a eq "@ ENV INC SIG"
+    ||
+    $a eq "ENV INC SIG",
+    $a
+   );
 
 @a = packsort(arrays());
 $t = 'arrays';
 $a = "@a";
 #write;
-if (
-    $a =~ /main::INC.*main::_.*main::a/
-#    $a eq "main::+ main::- main::ARGV main::INC main::_ main::a main::m main::syms main::vars"
-#    ||
-#    $a eq "main::ARGV main::INC main::_ main::a main::m main::syms main::vars"
-#    ||
-#    $a eq "main::INC main::_ main::a"
-
-   ) {
-    print "ok 3\n";
-} else {
-    print "not ok 3: $a\n";
-}
+like (
+      $a, "/main::INC.*main::_.*main::a/"
+     );
 
 eval {
     @a = Devel::Symdump->really_bogus('main');
 };
 $a = $@ ? $@ : "@a";
-##write;
-if ($a =~ /^invalid Devel::Symdump method: really_bogus\(\)/) {
-    print "ok 4\n";
-} else {
-    print "not ok 4 # a='$a'\n";
-}
+like ($a,
+      "/^invalid Devel::Symdump method: really_bogus\(\)/",
+     );
 
 $sob = rnew Devel::Symdump;
 
-
-#print "\nAll active packages:\n";
-#print "\tmain\n";
 @m=();
 for (active_packages($sob)) {
     push @m, "$_";
 }
 $a="@m";
-if ($a =~ /Carp.*Devel.*Devel::Symdump.*Devel::Symdump::Export.*DynaLoader.*Exporter.*Hidden.*big::long::hairy.*funny::little.*strict/) {
-    print "ok 5\n";
-} else {
-    print "[$a]\n";
-    print "not ok 5\n";
-}
+like ($a,
+      "/Carp.*Devel.*Devel::Symdump.*Devel::Symdump::Export.*DynaLoader.*Exporter.*Hidden.*big::long::hairy.*funny::little.*strict/");
 
-#print "\nAll apparent modules:\n";
 my %m=();
 for (active_modules($sob)) {
     $m{$_}=undef;
 }
 $a = join " ", keys %m;
 #print "[$a]\n";
-if (exists $m{"Carp"} &&
+ok (exists $m{"Carp"} &&
     exists $m{"Devel::Symdump"} &&
     exists $m{"Devel::Symdump::Export"} &&
     exists $m{"Exporter"} &&
     exists $m{"strict"} &&
-    exists $m{"vars"}) {
-    print "ok 6\n";
-} else {
-    print "not ok 6: $a\n";
-}
-
+    exists $m{"vars"});
 
 # Cannot test on the number of packages and functions because not
 # every perl is built the same way. Static perls will reveal more
@@ -139,8 +111,6 @@ my %Expect=qw(
 packages 13 scalars 28 arrays 7 hashes 5 functions 35 filehandles 9
 dirhandles 2 unknowns 53
 );
-
-$ok=6;
 
 #we don't count the unknowns. Newer perls might have different outcomes
 for $type ( qw{
@@ -162,23 +132,10 @@ for $type ( qw{
 	}
     }
 
-#    print "\nAll $type visible:\n";
-    $ok++;
-    if (@syms >= $Expect{$type}) { #See comment above on %Expect
-	print "ok $ok\n";
-    } else {
-	print "not ok $ok\n";
-	print "We expected ",
-	$Expect{$type},
-	" $type, got only ",
-	scalar @syms,
-	":\n";
-	for (@syms) {
-	    s/^main:://;
-	    print "\t", $prefices{$type}, uncontrol($_), "\n";
-	}
-    }
+    ok (@syms >= $Expect{$type});
 }
+
+exit;
 
 sub active_modules {
     my $ob = shift;

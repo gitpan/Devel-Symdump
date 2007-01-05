@@ -1,12 +1,12 @@
 --- #YAML:1.0
 name:                Devel-Symdump
-version:             2.0604
+version:             2.07
 abstract:            ~
 license:             perl
-generated_by:        ExtUtils::MakeMaker version 6.3004
-author:              ~
+generated_by:        ExtUtils::MakeMaker version 6.3101
 distribution_type:   module
 requires:     
+    Test::More:                    0
 meta-spec:
-    url: http://module-build.sourceforge.net/META-spec-new.html
-    version: 1.1
+    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
+    version: 1.2

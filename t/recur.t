@@ -1,3 +1,11 @@
+BEGIN {
+    $|++;
+    if ($] <= 5.006) {
+      print "1..0 # Skip: this test is known to fail with 5.005xx\n";
+      # (2007-06-25 akoenig: I have seen it working in the debugger)
+      eval "require POSIX; 1" and POSIX::_exit(0);
+    }
+}
 package Acme::Meta;
 
 BEGIN {
@@ -5,6 +13,7 @@ BEGIN {
   $Meta::{'Meta::'} = $main::{'Meta::'};
   $Acme::Meta::{'Meta::'} = $main::{'Meta::'};
 }
+use strict;
 require Test::More;
 my $tests = 3;
 Test::More->import( tests => $tests );

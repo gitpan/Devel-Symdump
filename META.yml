@@ -1,9 +1,9 @@
 --- #YAML:1.0
 name:                Devel-Symdump
-version:             2.07
+version:             2.08
 abstract:            ~
 license:             perl
-generated_by:        ExtUtils::MakeMaker version 6.3101
+generated_by:        ExtUtils::MakeMaker version 6.3601
 distribution_type:   module
 requires:     
     Test::More:                    0

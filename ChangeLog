@@ -1,3 +1,10 @@
+2009-03-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 2.08_51
+
+	* added a test by Jason M. Mills to chase down the bug he reports
+	in https://rt.cpan.org/Ticket/Display.html?id=43675
+
 2007-10-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 2.08

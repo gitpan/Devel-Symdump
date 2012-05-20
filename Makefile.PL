@@ -97,12 +97,15 @@ WriteMakefile(
                (LICENSE      => "perl") : (),
               ),
               PREREQ_PM => {
+                            'Compress::Zlib' => 0, # only for t/glob_to_local_typeglob.t
                             'Test::More' => 0,
                            },
 	      'clean' => {FILES => '*/*/*~'},
               'dist' => {
                          DIST_DEFAULT => 'Makefile setversion README all chlog tardist',
-                         COMPRESS => 'gzip -9f'
+                         # COMPRESS => 'gzip -9f',
+                         COMPRESS => 'bzip2 -9f',
+                         SUFFIX => ".bz2",
                         },
               @sign,
 	     );

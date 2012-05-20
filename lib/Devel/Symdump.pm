@@ -5,7 +5,7 @@ use Carp ();
 use strict;
 use vars qw($Defaults $VERSION *ENTRY $MAX_RECURSION);
 
-$VERSION = '2.08_51';
+$VERSION = '2.08_52';
 $MAX_RECURSION = 97;
 
 $Defaults = {

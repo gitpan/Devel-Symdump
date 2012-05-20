@@ -103,9 +103,9 @@ WriteMakefile(
 	      'clean' => {FILES => '*/*/*~'},
               'dist' => {
                          DIST_DEFAULT => 'Makefile setversion README all chlog tardist',
-                         # COMPRESS => 'gzip -9f',
-                         COMPRESS => 'bzip2 -9f',
-                         SUFFIX => ".bz2",
+                         COMPRESS => 'gzip -9f',
+                         # COMPRESS => 'bzip2 -9f',
+                         # SUFFIX => ".bz2",
                         },
               @sign,
 	     );

@@ -5,7 +5,7 @@ use Carp ();
 use strict;
 use vars qw($Defaults $VERSION *ENTRY $MAX_RECURSION);
 
-$VERSION = '2.08_52';
+$VERSION = '2.08_53';
 $MAX_RECURSION = 97;
 
 $Defaults = {
@@ -371,6 +371,13 @@ C<%>. In a scalar context, they will return the number of such
 symbols. Unknown symbols are usually either formats or variables that
 haven't yet got a defined value.
 
+Note that scalar symbol table entries are a special case.  If a symbol
+table entry exists at all, presence of a scalar is currently
+unknowable, due to a feature of Perl described in perlref "Making
+References" point 7.  For example, this package will mark a scalar
+value C<$foo> as present if any of C<@foo>, C<%foo>, C<&foo> etc. have
+been declared or used.
+
 =item as_string
 
 =item as_HTML
@@ -440,6 +447,10 @@ The design of this package is intentionally primitive and allows it to
 be subclassed easily. An example of a (maybe) useful subclass is
 Devel::Symdump::Export, a package which exports all methods of the
 Devel::Symdump package and turns them into functions.
+
+=head1 SEE ALSO
+
+Package::Stash
 
 =head1 AUTHORS
 

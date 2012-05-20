@@ -63,6 +63,13 @@ DESCRIPTION
         such symbols. Unknown symbols are usually either formats or
         variables that haven't yet got a defined value.
 
+        Note that scalar symbol table entries are a special case. If a
+        symbol table entry exists at all, presence of a scalar is currently
+        unknowable, due to a feature of Perl described in perlref "Making
+        References" point 7. For example, this package will mark a scalar
+        value $foo as present if any of @foo, %foo, &foo etc. have been
+        declared or used.
+
     as_string
     as_HTML
         As_string() and as_HTML() return a simple string/HTML
@@ -122,6 +129,9 @@ SUBCLASSING
     be subclassed easily. An example of a (maybe) useful subclass is
     Devel::Symdump::Export, a package which exports all methods of the
     Devel::Symdump package and turns them into functions.
+
+SEE ALSO
+    Package::Stash
 
 AUTHORS
     Andreas Koenig <andk@cpan.org> and Tom Christiansen <tchrist@perl.com>.

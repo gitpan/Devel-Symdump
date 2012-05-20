@@ -1,4 +1,22 @@
 ------------------------------------------------------------------------
+r41 | k | 2012-05-20 22:38:37 +0200 (Sun, 20 May 2012) | 1 line
+Changed paths:
+   M /trunk/ChangeLog
+
+ready for another release
+------------------------------------------------------------------------
+r40 | k | 2012-05-20 22:36:09 +0200 (Sun, 20 May 2012) | 1 line
+Changed paths:
+   M /trunk/lib/Devel/Symdump.pm
+
+apply doc patch by Nick Stokoe from ticket #77102
+------------------------------------------------------------------------
+r39 | k | 2012-05-20 22:27:54 +0200 (Sun, 20 May 2012) | 1 line
+Changed paths:
+   M /trunk/Makefile.PL
+
+switch back to gz, testing is over
+------------------------------------------------------------------------
 r38 | k | 2012-05-20 21:34:09 +0200 (Sun, 20 May 2012) | 1 line
 Changed paths:
    M /trunk/Makefile.PL

@@ -20,4 +20,4 @@ no_index:
 requires:
   Compress::Zlib: 0
   Test::More: 0
-version: 2.08_52
+version: 2.08_53

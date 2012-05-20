@@ -1,3 +1,11 @@
+2012-05-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 2.08_53
+
+	* apply doc patch by Nick Stokoe from ticket #77102
+
+	* declare dependency on Compress::Zlib
+
 2009-03-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 2.08_51

@@ -1,9 +1,13 @@
 2013-03-24  k  <k@k83.linux.bogus>
 
+	* release 2.10-TRIAL
+
 	* release 2.09-TRIAL
 
 	* address RT#84139: fix test to work with upcoming perl 5.18
 	(Thanks to ZEFRAM)
+
+	* fixed the autogen.t test again, this time for perl 5.8.9
 
 2012-05-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

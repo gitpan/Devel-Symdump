@@ -1,3 +1,10 @@
+2013-03-24  k  <k@k83.linux.bogus>
+
+	* release 2.09-TRIAL
+
+	* address RT#84139: fix test to work with upcoming perl 5.18
+	(Thanks to ZEFRAM)
+
 2012-05-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 2.08_53
@@ -205,3 +212,8 @@
 	* 1.05
 
 	* First release of the formerly Devel::Debug called package.
+
+	Local Variables:
+	mode: change-log
+	change-log-default-name: "Changes"
+	End:

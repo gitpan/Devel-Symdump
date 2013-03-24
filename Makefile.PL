@@ -1,114 +1,114 @@
-use lib "./lib";
-use Devel::Symdump ();
+#!/usr/bin/perl -w -*- mode: cperl -*-
+use strict;
+use vars qw( $VERSION );
 use ExtUtils::MakeMaker qw(:DEFAULT);
 
 eval { require File::Spec; };
 my $HAVE_FILE_SPEC = !$@;
-use strict;
-use vars qw($VERSION);
-
-my $Id = q$Id: Makefile.PL 146 2005-08-09 04:25:21Z k $;
-$VERSION = sprintf "%.3f", 1 + substr(q$Rev: 146 $,4)/1000;
 
 my $version_diff = 0; # we'll have to die if this becomes true
+my $version_from;
+my $is_trial = 1;
+my $version;
 {
   local $^W;
   $ExtUtils::MakeMaker::VERSION = eval $ExtUtils::MakeMaker::VERSION;
 }
 if ($HAVE_FILE_SPEC) {
-  my $version_from = File::Spec->catfile(qw(lib Devel Symdump.pm));
+  $version_from = File::Spec->catfile(qw(lib Devel Symdump.pm));
+} else {
+  $version_from = q(lib/Devel/Symdump.pm);
+}
+unshift @INC, "lib";
+require $version_from;
+$version = $Devel::Symdump::VERSION;
+if ($is_trial && $version !~ /_/) {
+    $version .= "-TRIAL";
+}
+{
   my $version_set_manually = 1; # not by SVN
-
   if ($ARGV[0] && $ARGV[0] eq "--setversion") {
     die "Your perl is a bit dated[$]].\nDo not make a release with it\n" if $] < 5.008;
-    die "Your MakeMaker is a bit dated[$]].\nDo not make a release with it\n"
-        if $ExtUtils::MakeMaker::VERSION < 6.3004;
+    die "Your MakeMaker is a bit dated[$ExtUtils::MakeMaker::VERSION].\nDo not make a release with it\n"
+        if $ExtUtils::MakeMaker::VERSION < 6.4502;
     die "Your MakeMaker doesn't do the sign woodoo" unless
         MM->can("signature_target");
     shift @ARGV;
     my $st;
     local $ENV{LANG} = "C";
-    open $st, "svn st -u|" or die;
-    my $dirty = 0;
-    while (<$st>) {
-      next if /^\?/;
-      next if /^Head revision:/;
-      next if /^Status against revision:/;
-      print;
-      $dirty++;
-    }
-    close $st;
-    die "Not everything checked in?" if $dirty;
+    my $dirty = `git status --porcelain --untracked-files=no`;
+    die "Not everything checked in or out?\n====\n$dirty====\n" if $dirty;
 
-    # $re parses the upper boundary of the output of svnversion
-    my $re;
-    eval q{ $re = qr/(?:\d+:)?(\d+)[SM]*$/; };
-    die $@ if $@; # old perl
-    my($sv_dot)  = `svnversion .`             =~ $re;
-    my($sv_from) = `svn st -u -v $version_from`  =~ /^.{8}\s*(?:\d+)\s*(\d+)/;
-    die "Could not determine sv_from or sv_dot"
-        unless $sv_from > 0 && $sv_dot > 0;
     if ($version_set_manually) {
-      unshift @INC, "lib";
-      require $version_from;
+      # we must control that the VERSION in this .pm is the same as in the Makefile
       open my $fh, "make the-release-name|" or die;
       my $have_version;
       while (<$fh>) {
-        next unless /^version\s+([\d\._]+)/;
-        $have_version = eval $1;
+        next unless /^version\s+([\d\._]+(?:-TRIAL)?)/;
+        $have_version = $1;
       }
       die "could not determine current version from Makefile" unless $have_version;
       eval q{
       no warnings "numeric";
       my $dsv = $Devel::Symdump::VERSION;
-      $dsv =~ s/_//g;
       if ($dsv != $have_version) {
         warn "Not equal: D:S:VERSION[$dsv] Makefile version[$have_version]";
         $version_diff = 1;
       }
 };
       die $@ if $@;
-    } else {
-      if ($sv_dot > $sv_from) {
-        warn "setting some property to make a checkin of this file possible";
-        0==system(svn => "propset",
-                  "cpan:release",
-                  "after_$sv_dot",
-                  $version_from) or die;
-        warn "checking in to get the version up to the bleading edge";
-        0==system(svn => "ci",
-                  "-m",
-                  "Property set for release after_$sv_dot",
-                  $version_from) or die;
-        # will have to die after Makefile is rewritten:
-        $version_diff = 1;
-      }
     }
     exit unless $version_diff;
   }
 }
 
+my $prereq_pm = {
+                 'Compress::Zlib' => 0, # only for t/glob_to_local_typeglob.t
+                 'Test::More' => 0,
+                };
 my @sign = (MM->can("signature_target") ? (SIGN => 1) : ());
 WriteMakefile(
 	      NAME => "Devel::Symdump",
 	      DISTNAME => "Devel-Symdump",
-	      VERSION_FROM => "lib/Devel/Symdump.pm",
-              ($ExtUtils::MakeMaker::VERSION >= 6.3001 ?
+	      VERSION => $version,
+              PREREQ_PM    => $prereq_pm,
+              ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
                (LICENSE      => "perl") : (),
               ),
-              PREREQ_PM => {
-                            'Compress::Zlib' => 0, # only for t/glob_to_local_typeglob.t
-                            'Test::More' => 0,
-                           },
-	      'clean' => {FILES => '*/*/*~'},
-              'dist' => {
-                         DIST_DEFAULT => 'Makefile setversion README all chlog tardist',
-                         COMPRESS => 'gzip -9f',
-                         # COMPRESS => 'bzip2 -9f',
-                         # SUFFIX => ".bz2",
-                        },
+              ($ExtUtils::MakeMaker::VERSION >= 6.48 ?
+               (MIN_PERL_VERSION => '5.004') : (),
+              ),
+              clean => {
+                        FILES => '*/*/*~',
+                       },
               @sign,
-	     );
+              ($] >= 5.005 ?
+               (
+                ABSTRACT_FROM  => 'lib/Devel/Symdump.pm', # retrieve abstract from module
+                AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : (),
+              ),
+              dist => {
+                       DIST_DEFAULT => join(" ", # note: order matters!
+                                            "verify-no-subdir",
+                                            "verify-changes-date",
+                                            "verify-changes-version",
+                                            "Makefile",
+                                            "setversion",
+                                            "README",
+                                            "all",
+                                            "tardist",
+                                           ),
+                       COMPRESS => 'gzip -9',
+                      },
+              # I took it from RT-CPAN ticket 30098:
+              ($ExtUtils::MakeMaker::VERSION >= 6.4502 ?
+               (META_ADD => {
+                             resources => {
+                                 repository => "git://github.com/andk/devel-symdump.git",
+                             },
+                             keywords => ['symbol table inspection'],
+                            }) : ()),
+             );
 
 if ($version_diff){
   die "
@@ -118,25 +118,54 @@ if ($version_diff){
 ";
 }
 
-sub MY::postamble {
+package MY;
+sub distsignature {
+    my($self) = shift;
+    my $ret = $self->SUPER::distsignature_target(@_);
+    $ret =~ s|cpansign|\`dirname \$(PERL)\`/cpansign|g;
+    return $ret;
+}
+sub macro {
+    q{
+LC_ALL_noexport=en_GB.utf8
+
+YAML_MODULE=YAML::Syck
+}
+}
+
+sub postamble {
   q{
+# the subdirs on MY OWN BOX are allowed here (only used for make dist!)
+OKDIRS=benchmark|bin|blib|lib|scripts|t
+
+verify-no-subdir:
+	@$(PERL) -e 'my$$s=join",",grep{!/^($(OKDIRS))\z/x&&-d($$_)}glob"*";' \
+		-e 'die"unexpected dir:$$s"if$$s'
+
+verify-changes-date:
+	@$(PERL) -ne 'BEGIN{my@t=(localtime)[5,4,3];$$t[0]+=1900;$$t[1]++;$$t=sprintf"%04d-%02d-%02d",@t}' \
+		-e '$$ok++,exit if /^$$t\s/; END{die "Alert: did not find <$$t> in Changes file" unless $$ok}' Changes
+
+verify-changes-version:
+	@$(PERL) -ne '$$ok++,exit if /\b$(VERSION)\b/; END{die "Alert: did not find <$(VERSION)> in Changes file" unless $$ok}' Changes
+
 setversion:
 	$(PERL) Makefile.PL --setversion
 
 README: lib/Devel/Symdump.pm Makefile
-	chmod +w $@
-	/usr/bin/pod2text lib/Devel/Symdump.pm > $@
-
-chlog ::
-	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog.svn
-	cat ChangeLog.local >> ChangeLog.svn
+	-test -r $@ && chmod +w $@
+	-$(PERL) -MPod::Text -e 'Pod::Text->new->parse_from_file(\*ARGV)' lib/Devel/Symdump.pm > $@
 
 the-release-name :
 	$(NOECHO) $(ECHO) 'version ' $(VERSION)
 	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
 
-release ::
-	/usr/bin/perl -I../../CPAN/SVN/release-lib -S release $(DISTVNAME).tar$(SUFFIX)
+release :: disttest
+	git tag -m 'This is $(VERSION)' "$(VERSION)"
+	ls -l $(DISTVNAME).tar$(SUFFIX)
+	rm -rf $(DISTVNAME)
+	$(NOECHO) $(ECHO) '#### Suggested next steps:'
+	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
 sign:
 	cpansign -s
@@ -147,13 +176,13 @@ howto-release:
 }
 }
 
-sub MY::dist_ci {
+sub dist_ci {
   return qq{ci :
 	svn ci
 };
 }
 
-sub MY::dist_test {
+sub dist_test {
   return q{
 # if we depend on $(DISTVNAME).tar$(SUFFIX), then the rest of the
 # Makefile breaks our intent to NOT remake dist
@@ -163,5 +192,27 @@ disttest :
 	cd $(DISTVNAME) && $(ABSPERLRUN) Makefile.PL
 	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
 	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
+
+distdir ::
+	touch $(DISTVNAME)/SIGNATURE && $(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
+	$(CP) $(DISTVNAME)/META.yml  ./META.yml
+	$(CP) $(DISTVNAME)/META.json  ./META.json
+	$(CP) $(DISTVNAME)/MANIFEST  ./MANIFEST
+
 }
+}
+
+sub distdir {
+  my $self = shift;
+  my $out = $self->SUPER::distdir;
+  $out =~ s/distdir :/distdir ::/g;
+  return $out;
+}
+
+# dist_dir was the name in very old MakeMaker as of 5.005_04
+sub dist_dir {
+  my $self = shift;
+  my $out = $self->SUPER::dist_dir;
+  $out =~ s/distdir :/distdir ::/g;
+  return $out;
 }

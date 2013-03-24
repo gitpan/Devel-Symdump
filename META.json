@@ -1,10 +1,13 @@
 {
-   "abstract" : "unknown",
+   "abstract" : "dump symbol names or the symbol table",
    "author" : [
-      "unknown"
+      "Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "ExtUtils::MakeMaker version 6.6302, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "ExtUtils::MakeMaker version 6.6501, CPAN::Meta::Converter version 2.120921",
+   "keywords" : [
+      "symbol table inspection"
+   ],
    "license" : [
       "perl_5"
    ],
@@ -33,10 +36,16 @@
       "runtime" : {
          "requires" : {
             "Compress::Zlib" : "0",
-            "Test::More" : "0"
+            "Test::More" : "0",
+            "perl" : "5.004"
          }
       }
    },
-   "release_status" : "testing",
-   "version" : "2.08_53"
+   "release_status" : "stable",
+   "resources" : {
+      "repository" : {
+         "url" : "git://github.com/andk/devel-symdump.git"
+      }
+   },
+   "version" : "2.09-TRIAL"
 }

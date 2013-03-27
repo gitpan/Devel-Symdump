@@ -25,4 +25,4 @@ requires:
   perl: 5.004
 resources:
   repository: git://github.com/andk/devel-symdump.git
-version: 2.10-TRIAL
+version: 2.10

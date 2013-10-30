@@ -7,7 +7,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 0
 dynamic_config: 1
-generated_by: 'ExtUtils::MakeMaker version 6.6501, CPAN::Meta::Converter version 2.120921'
+generated_by: 'ExtUtils::MakeMaker version 6.8, CPAN::Meta::Converter version 2.132830'
 keywords:
   - 'symbol table inspection'
 license: perl
@@ -25,4 +25,4 @@ requires:
   perl: 5.004
 resources:
   repository: git://github.com/andk/devel-symdump.git
-version: 2.10
+version: 2.11

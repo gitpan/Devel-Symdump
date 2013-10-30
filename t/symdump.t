@@ -55,6 +55,8 @@ ok (
     ||
     $a eq "^H @ ENV INC SIG"     # ^H hints 27643 (?)
     ||
+    $a eq "^H ENV INC SIG"       # v5.19.5-71-gd456e3f
+    ||
     $a eq "@ ENV INC SIG"
     ||
     $a eq "ENV INC SIG",

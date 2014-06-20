@@ -5,7 +5,7 @@ use Carp ();
 use strict;
 use vars qw($Defaults $VERSION *ENTRY $MAX_RECURSION);
 
-$VERSION = '2.11';
+$VERSION = '2.12';
 $MAX_RECURSION = 97;
 
 $Defaults = {
@@ -450,7 +450,8 @@ Devel::Symdump package and turns them into functions.
 
 =head1 SEE ALSO
 
-Package::Stash
+Routines for manipulating stashes: C<Package::Stash>; to work with
+lexicals: C<PadWalker>.
 
 =head1 AUTHORS
 

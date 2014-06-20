@@ -147,9 +147,9 @@ sub active_modules {
 	if (
 		defined &{ "$pack\::import"   } 	||
 		defined &{ "$pack\::AUTOLOAD" } 	||
-		defined @{ "$pack\::ISA"      }	||
-		defined @{ "$pack\::EXPORT"   }	||
-		defined @{ "$pack\::EXPORT_OK"}
+		@{ "$pack\::ISA"      }	||
+		@{ "$pack\::EXPORT"   }	||
+		@{ "$pack\::EXPORT_OK"}
 	    )
 	{
 	    push @modules, $pack;

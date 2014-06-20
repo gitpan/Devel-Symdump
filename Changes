@@ -1,3 +1,11 @@
+2014-06-20  k  <andk@cpan.org>
+
+	* release 2.12
+
+	* test rewrite: v5.21.0-424-ge35475d stopped supporting
+	defined(@$ref) which was used in t/symdump.t (thanks to Aaron
+	Crane for spotting)
+
 2013-10-30  k  <andk@cpan.org>
 
 	* release 2.11

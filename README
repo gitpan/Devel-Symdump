@@ -131,7 +131,8 @@ SUBCLASSING
     Devel::Symdump package and turns them into functions.
 
 SEE ALSO
-    Package::Stash
+    Routines for manipulating stashes: "Package::Stash"; to work with
+    lexicals: "PadWalker".
 
 AUTHORS
     Andreas Koenig <andk@cpan.org> and Tom Christiansen <tchrist@perl.com>.

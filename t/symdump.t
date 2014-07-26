@@ -134,7 +134,7 @@ for $type ( qw{
 	}
     }
 
-    ok (@syms >= $Expect{$type});
+    ok (@syms >= $Expect{$type}, $type);
 }
 
 exit;

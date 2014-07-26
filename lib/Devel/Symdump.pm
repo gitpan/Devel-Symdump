@@ -5,7 +5,7 @@ use Carp ();
 use strict;
 use vars qw($Defaults $VERSION *ENTRY $MAX_RECURSION);
 
-$VERSION = '2.12';
+$VERSION = '2.13';
 $MAX_RECURSION = 97;
 
 $Defaults = {
@@ -288,10 +288,30 @@ AUTOLOAD {
 	if ($compat eq "file") {
 	    @syms = grep { defined(fileno($_)) } @syms;
 	} else {
-	    @syms = grep { defined(telldir($_)) } @syms;
+	    @syms = grep { _is_dirhandle($_) } @syms;
 	}
     }
     return @syms; # make sure now it gets context right
+}
+
+use Config ();
+use constant HAVE_TELLDIR => $Config::Config{d_telldir};
+sub _is_dirhandle {
+    my ($glob) = @_;
+    if ( HAVE_TELLDIR ) {
+        return defined(telldir($glob));
+    }
+    else {
+        if ( !ref $glob ) {
+            no strict 'refs';
+            $glob = \*{$glob};
+        }
+        require B;
+        my $obj = B::svref_2object($glob);
+        return if !$obj || !eval{ $obj->IO; $obj->IO->IoTYPE; 1 };
+        my $mode = $obj->IO->IoTYPE;
+        return $mode eq "\0" ? 1 : 0;
+    }
 }
 
 1;

@@ -8,7 +8,7 @@ my $HAVE_FILE_SPEC = !$@;
 
 my $version_diff = 0; # we'll have to die if this becomes true
 my $version_from;
-my $is_trial = 0;
+my $is_trial = 1;
 my $version;
 {
   local $^W;

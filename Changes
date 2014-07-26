@@ -1,3 +1,9 @@
+2014-07-26  k  <andk@cpan.org>
+
+	* release 2.13-TRIAL
+
+	* support for telldir (Brian Fraser)
+
 2014-06-20  k  <andk@cpan.org>
 
 	* release 2.12

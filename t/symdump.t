@@ -39,7 +39,9 @@ $a = "@a";
 ok (
     $a eq "main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::stderr main::stdin main::stdout"
     ||
-    $a eq "main::ARGV main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::i_am_the_symbol_printing_format_lest_there_be_any_doubt main::stderr main::stdin main::stdout",
+    $a eq "main::ARGV main::DATA main::Hmmmm main::STDERR main::STDIN main::STDOUT main::i_am_the_symbol_printing_format_lest_there_be_any_doubt main::stderr main::stdin main::stdout"
+    ||
+    $a eq "main::DATA main::DOT main::Hmmmm main::STDERR main::STDIN main::STDOUT main::stderr main::stdin main::stdout", # v5.21.6-337-g67f2cc7
     $a
    );
 
